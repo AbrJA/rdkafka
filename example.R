@@ -15,4 +15,4 @@ for (counter in seq_len(5)) {
 # KafkaConsumer
 consumer <- KafkaConsumer$new(host = "localhost", port = 9092, group_id = "r", extra_options = list("auto.offset.reset" = "earliest"))
 consumer$subscribe(topics = c("Topic1", "Topic2"))
-consumer$consume(num_results = 10, timeout_ms = 1000)
+consumer$consume(num_results = 10, timeout_ms = 100)

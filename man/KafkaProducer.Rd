@@ -47,7 +47,7 @@ for publishing data to topics.
 \if{latex}{\out{\hypertarget{method-KafkaProducer-produce}{}}}
 \subsection{Method \code{produce()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$produce(topic, values, keys, partition = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$produce(topic, keys, values, partition = 0)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -55,9 +55,9 @@ for publishing data to topics.
 \describe{
 \item{\code{topic}}{string}
 
-\item{\code{values}}{string vector}
-
 \item{\code{keys}}{string vector}
+
+\item{\code{values}}{string vector}
 
 \item{\code{partition}}{integer}
 }

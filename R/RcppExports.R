@@ -3,7 +3,7 @@
 
 #' @title GetRdConsumer
 #' @name GetRdConsumer
-#' @description Creates an Rcpp::XPtr<RdKafka::Consumer>. For more details on options \link{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}
+#' @description Creates an Rcpp::XPtr<RdKafka::Consumer>. For more details on options see \href{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}
 #' @param properties a character vector indicating option properties to parameterize the RdKafka::Consumer
 #' @param values a character vector indicating option values to parameterize the RdKafka::Consumer. Must be of same length as properties.
 #' @return a Rcpp::XPtr<RdKafka::Consumer>
@@ -28,15 +28,15 @@ RdSubscribe <- function(consumerPtr, Rtopics) {
 #'              the provided consumer is subscribed to.
 #' @param consumerPtr a reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>
 #' @param numResults how many results should be consumed before returning. Will return early if offset is at maximum
-#' @param timeout_ms number of milliseconds to wait for a new message
-#' @return a list of length numResults with values list(key=key,value=value)
-KafkaConsume <- function(consumerPtr, numResults, timeout_ms) {
-    .Call(`_rdkafka_KafkaConsume`, consumerPtr, numResults, timeout_ms)
+#' @param timeoutMs number of milliseconds to wait for a new message
+#' @return a list of length numResults with values list(key = key, value = value)
+KafkaConsume <- function(consumerPtr, numResults, timeoutMs) {
+    .Call(`_rdkafka_KafkaConsume`, consumerPtr, numResults, timeoutMs)
 }
 
 #' @title GetRdProducer
 #' @name GetRdProducer
-#' @description Creates an Rcpp::XPtr<RdKafka::Producer>. For more details on options \link{https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md}
+#' @description Creates an Rcpp::XPtr<RdKafka::Producer>. For more details on options see \href{https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}
 #' @param properties a character vector indicating option properties to parameterize the RdKafka::Producer
 #' @param values a character vector indicating option values to parameterize the RdKafka::Producer. Must be of same length as properties.
 #' @return a Rcpp::XPtr<RdKafka::Producer>

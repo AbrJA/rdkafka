@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 //' @title GetRdConsumer
 //' @name GetRdConsumer
-//' @description Creates an Rcpp::XPtr<RdKafka::Consumer>. For more details on options \link{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}
+//' @description Creates an Rcpp::XPtr<RdKafka::Consumer>. For more details on options see \href{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}
 //' @param properties a character vector indicating option properties to parameterize the RdKafka::Consumer
 //' @param values a character vector indicating option values to parameterize the RdKafka::Consumer. Must be of same length as properties.
 //' @return a Rcpp::XPtr<RdKafka::Consumer>
@@ -63,7 +63,7 @@ Rcpp::List KafkaConsume(SEXP consumerPtr, int numResults, int timeoutMs) {
     Rcpp::List messages(numResults);
     for(int i = 0; i < numResults; i++) {
         RdKafka::Message *msg = consumer->consume(timeoutMs);
-        switch(msg->err()){
+        switch(msg->err()) {
             case RdKafka::ERR_NO_ERROR: {
                 Rcpp::List message = Rcpp::List::create(Rcpp::Named("topic") = msg->topic_name(),
                                                         Rcpp::Named("key") = *msg->key(),
@@ -71,14 +71,14 @@ Rcpp::List KafkaConsume(SEXP consumerPtr, int numResults, int timeoutMs) {
                 messages[i] = message;
                 break;
             } case RdKafka::ERR__PARTITION_EOF: {
-                printf("No additional messages available\n");
+                Rcpp::Rcout << "No additional messages available" << std::endl;
                 goto exit_loop;
             } case RdKafka::ERR__TIMED_OUT: {
-                printf("Timeout was reached with no new messages\n");
+                Rcpp::Rcout << "Timeout was reached with no new messages" << std::endl;
                 goto exit_loop;
             } default: {
                 /* Errors */
-                printf("Consume failed: %s\n", msg->errstr().c_str());
+                Rcpp::Rcout << "Consume failed: " << msg->errstr().c_str() << std::endl;
                 goto exit_loop;
             }
         }

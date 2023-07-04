@@ -4,18 +4,40 @@
 \alias{KafkaConsumer}
 \title{Kakfa Consumer}
 \description{
-A consumer is an application which
-subscribes to one or more topics and processes
+A consumer is an application which subscribes to one or more topics and processes
 new messages as they arrive on that topic.
+Consumers may also be instructed to process older messages.
+Consumers belong to "consumer groups". Consumer groups with more than one consumer instance can be
+used to parallelize message processing and / or distribute it over multiple physical machines.
+}
+\examples{
+\dontrun{
+library(rdkafka)
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{         Consumers may also be instructed to process older
-         messages.
+# KafkaProducer
+producer <- KafkaProducer$new(host = "localhost", port = 9092)
+producer$produce(topic = "MyTest",
+                 key = "Message 1",
+                 value = "My First Message")
+# Number of messages successfuly sent is returned
+# [1] 1
 
-         Consumers belong to "consumer groups". Consumer
-         groups with more than one consumer instance can be
-         used to parallelize message processing and / or
-         distribute it over multiple physical machines.
-}\if{html}{\out{</div>}}
+
+# KafkaConsumer
+consumer <- KafkaConsumer$new(host = "localhost", port = 9092, group_id = "test",
+extra_options = list(`auto.offset.reset` = "earliest"))
+consumer$subscribe(topics = "MyTest")
+result <- consumer$consume(topic = "MyTest")
+
+result
+# Consumed messages are returned in a list(list(key,val)) format
+# [[1]]
+# [[1]]$key
+# [1] "myKey"
+#
+# [[1]]$payload
+# [1] "My First Message"
+}
 }
 \references{
 \href{https://kafka.apache.org/documentation/#intro_consumers}{Apache Kafka docs - Consumers}
@@ -80,17 +102,17 @@ invisible. Logical. \code{TRUE} if all went good.
 \if{latex}{\out{\hypertarget{method-KafkaConsumer-consume}{}}}
 \subsection{Method \code{consume()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$consume(topic, num_results = 100, timeout_ms = 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$consume(num_results = 100, timeout_ms = 1000)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{topic}}{string}
-
 \item{\code{num_results}}{integer}
 
 \item{\code{timeout_ms}}{integer}
+
+\item{\code{topic}}{string}
 }
 \if{html}{\out{</div>}}
 }

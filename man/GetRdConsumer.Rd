@@ -15,5 +15,5 @@ GetRdConsumer(properties, values)
 a Rcpp::XPtr\url{RdKafka::Consumer}
 }
 \description{
-Creates an Rcpp::XPtr\url{RdKafka::Consumer}. For more details on options \link{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}
+Creates an Rcpp::XPtr\url{RdKafka::Consumer}. For more details on options see \href{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}
 }

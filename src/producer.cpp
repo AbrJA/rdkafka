@@ -10,7 +10,7 @@
 
 //' @title GetRdProducer
 //' @name GetRdProducer
-//' @description Creates an Rcpp::XPtr<RdKafka::Producer>. For more details on options \link{https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md}
+//' @description Creates an Rcpp::XPtr<RdKafka::Producer>. For more details on options see \href{https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}
 //' @param properties a character vector indicating option properties to parameterize the RdKafka::Producer
 //' @param values a character vector indicating option values to parameterize the RdKafka::Producer. Must be of same length as properties.
 //' @return a Rcpp::XPtr<RdKafka::Producer>
@@ -45,8 +45,8 @@ int KafkaProduce(SEXP producerPtr,
     std::string s_topic = Rcpp::as<std::string>(topic);
 
     if (keys.size() != values.size()) {
-        std::cout << "keys and values must be same size" << std::endl;
-        return -1;
+      Rcpp::Rcout << "keys and values must be same size" << std::endl;
+      return -1;
     }
     int numMsgs = keys.size();
     int numSent = 0;

@@ -1,8 +1,7 @@
 #' @importFrom R6 R6Class
 #' @title Kakfa Producer
 #' @name KafkaProducer
-#' @description A producer is an application that is responsible
-#'              for publishing data to topics.
+#' @description A producer is an application that is responsible for publishing data to topics.
 #' @references \href{https://kafka.apache.org/documentation/#intro_producers}{Apache Kafka docs - Producers}
 #' @importFrom R6 R6Class
 #' @export

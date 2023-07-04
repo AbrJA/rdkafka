@@ -23,27 +23,27 @@ BEGIN_RCPP
 END_RCPP
 }
 // RdSubscribe
-int RdSubscribe(SEXP consumerPtr, const Rcpp::StringVector Rtopics);
+int RdSubscribe(SEXP consumerPtr, Rcpp::StringVector Rtopics);
 RcppExport SEXP _rdkafka_RdSubscribe(SEXP consumerPtrSEXP, SEXP RtopicsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type consumerPtr(consumerPtrSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::StringVector >::type Rtopics(RtopicsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type Rtopics(RtopicsSEXP);
     rcpp_result_gen = Rcpp::wrap(RdSubscribe(consumerPtr, Rtopics));
     return rcpp_result_gen;
 END_RCPP
 }
 // KafkaConsume
-Rcpp::List KafkaConsume(SEXP consumerPtr, int numResults, int timeout_ms);
-RcppExport SEXP _rdkafka_KafkaConsume(SEXP consumerPtrSEXP, SEXP numResultsSEXP, SEXP timeout_msSEXP) {
+Rcpp::List KafkaConsume(SEXP consumerPtr, int numResults, int timeoutMs);
+RcppExport SEXP _rdkafka_KafkaConsume(SEXP consumerPtrSEXP, SEXP numResultsSEXP, SEXP timeoutMsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type consumerPtr(consumerPtrSEXP);
     Rcpp::traits::input_parameter< int >::type numResults(numResultsSEXP);
-    Rcpp::traits::input_parameter< int >::type timeout_ms(timeout_msSEXP);
-    rcpp_result_gen = Rcpp::wrap(KafkaConsume(consumerPtr, numResults, timeout_ms));
+    Rcpp::traits::input_parameter< int >::type timeoutMs(timeoutMsSEXP);
+    rcpp_result_gen = Rcpp::wrap(KafkaConsume(consumerPtr, numResults, timeoutMs));
     return rcpp_result_gen;
 END_RCPP
 }

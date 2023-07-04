@@ -4,17 +4,17 @@
 \alias{KafkaConsume}
 \title{KafkaConsume}
 \usage{
-KafkaConsume(consumerPtr, numResults, timeout_ms)
+KafkaConsume(consumerPtr, numResults, timeoutMs)
 }
 \arguments{
 \item{consumerPtr}{a reference to a Rcpp::XPtr\url{RdKafka::KafkaConsumer}}
 
 \item{numResults}{how many results should be consumed before returning. Will return early if offset is at maximum}
 
-\item{timeout_ms}{number of milliseconds to wait for a new message}
+\item{timeoutMs}{number of milliseconds to wait for a new message}
 }
 \value{
-a list of length numResults with values list(key=key,value=value)
+a list of length numResults with values list(key = key, value = value)
 }
 \description{
 Consume a fixed number of results from whatever topic(s)

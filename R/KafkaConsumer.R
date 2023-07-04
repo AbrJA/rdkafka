@@ -1,22 +1,16 @@
 #' @importFrom R6 R6Class
 #' @title Kakfa Consumer
 #' @name KafkaConsumer
-#' @description A consumer is an application which
-#'              subscribes to one or more topics and processes
-#'              new messages as they arrive on that topic.
-#'
-#'              Consumers may also be instructed to process older
-#'              messages.
-#'
-#'              Consumers belong to "consumer groups". Consumer
-#'              groups with more than one consumer instance can be
-#'              used to parallelize message processing and / or
-#'              distribute it over multiple physical machines.
+#' @description A consumer is an application which subscribes to one or more topics and processes
+#' new messages as they arrive on that topic.
+#' Consumers may also be instructed to process older messages.
+#' Consumers belong to "consumer groups". Consumer groups with more than one consumer instance can be
+#' used to parallelize message processing and / or distribute it over multiple physical machines.
 #' @references \href{https://kafka.apache.org/documentation/#intro_consumers}{Apache Kafka docs - Consumers}
 #' @importFrom R6 R6Class
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' library(rdkafka)
 #'
 #' # KafkaProducer
@@ -29,7 +23,8 @@
 #'
 #'
 #' # KafkaConsumer
-#' consumer <- KafkaConsumer$new(host = "localhost", port = 9092, group_id = "test", extra_options = list(`auto.offset.reset` = "earliest"))
+#' consumer <- KafkaConsumer$new(host = "localhost", port = 9092, group_id = "test",
+#' extra_options = list(`auto.offset.reset` = "earliest"))
 #' consumer$subscribe(topics = "MyTest")
 #' result <- consumer$consume(topic = "MyTest")
 #'

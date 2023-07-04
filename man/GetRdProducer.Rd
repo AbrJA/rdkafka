@@ -15,5 +15,5 @@ GetRdProducer(properties, values)
 a Rcpp::XPtr\url{RdKafka::Producer}
 }
 \description{
-Creates an Rcpp::XPtr\url{RdKafka::Producer}. For more details on options \link{https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md}
+Creates an Rcpp::XPtr\url{RdKafka::Producer}. For more details on options see \href{https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}
 }

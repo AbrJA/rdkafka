@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person(given = "Abraham", 
     family = "Jaimes", 
-    email = "ajaimes@occ.com.mx", 
+    email = "abraham.jaimes.mx@gmail.com", 
     role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE

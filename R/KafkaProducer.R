@@ -20,7 +20,7 @@ KafkaProducer <- R6::R6Class(
             private$host <- host
             private$port <- port
             properties <- c("metadata.broker.list", names(extra_options))
-            values <- c(self$getHostPort(), unlist(extra_options, use.names = FALSE))
+            values <- c(self$get_servers(), unlist(extra_options, use.names = FALSE))
             private$producer_ptr <- GetRdProducer(properties, values)
         },
         # Produce single message to topic
@@ -34,12 +34,12 @@ KafkaProducer <- R6::R6Class(
         #' @export
         produce = function(topic, keys, values, partition = 0) {
             stopifnot(is.character(topic), length(topic) == 1, is.character(keys), is.character(values), is.numeric(partition), length(partition) == 1)
-            KafkaProduce(private$producer_ptr, topic, partition, keys, values)
+            invisible(KafkaProduce(private$producer_ptr, topic, partition, keys, values))
         },
         #-----------------------------------------------------------------
         #' @return invisible. Logical. `TRUE` if all went good.
         #' @export
-        getHostPort = function() {
+        get_servers = function() {
             stopifnot(!is.null(private$host), !is.null(private$port))
             paste0(private$host, ":", private$port)
         }

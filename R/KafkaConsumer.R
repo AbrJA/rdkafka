@@ -53,7 +53,7 @@ KafkaConsumer <- R6::R6Class(
             private$host <- host
             private$port <- port
             properties <- c("metadata.broker.list", "group.id", names(extra_options))
-            values <- c(self$getHostPort(), group_id, unlist(extra_options, use.names = FALSE))
+            values <- c(self$get_servers(), group_id, unlist(extra_options, use.names = FALSE))
             private$consumer_ptr <- GetRdConsumer(properties, values)
         },
         #-----------------------------------------------------------------
@@ -65,7 +65,7 @@ KafkaConsumer <- R6::R6Class(
             stopifnot(is.character(topics))
             result <- RdSubscribe(private$consumer_ptr, topics)
             if (result == 0) {
-                private$topics <- c(private$topics, topic)
+                private$topics <- c(private$topics, topics)
             }
         },
         #-----------------------------------------------------------------
@@ -83,13 +83,13 @@ KafkaConsumer <- R6::R6Class(
         #-----------------------------------------------------------------
         #' @return invisible. Logical. `TRUE` if all went good.
         #' @export
-        getTopics = function() {
+        get_topics = function() {
             private$topics
         },
         #-----------------------------------------------------------------
         #' @return invisible. Logical. `TRUE` if all went good.
         #' @export
-        getHostPort = function() {
+        get_servers = function() {
             stopifnot(!is.null(private$host), !is.null(private$port))
             paste0(private$host, ":", private$port)
         }

@@ -1,0 +1,2 @@
+#PKG_LIBS=$(shell pkg-config --libs rdkafka++)
+PKG_LIBS = @rdkafka_libs@

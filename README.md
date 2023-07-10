@@ -19,7 +19,11 @@ install.packages("devtools")
 devtools::install_github("AbrJA/rdkafka")
 ```
 
+**Note:** Only tested on linux at the moment.
+
 ## Example
+
+### Previously
 
 Start the Kafka broker with the `docker compose` command:
 
@@ -27,8 +31,20 @@ Start the Kafka broker with the `docker compose` command:
 (sudo) docker compose up -d
 ```
 
-**Note**: Make sure you are in the directory containing the
+**Note:** Make sure you are in the directory containing the
 `docker-compose.yml` file.
+
+Create the example topics `Topic1` and `Topic2` with the following
+command:
+
+``` r
+(sudo) docker compose exec broker \
+  kafka-topics --create \
+    --topic Topic1 \
+    --bootstrap-server localhost:9092 \
+    --replication-factor 1 \
+    --partitions 1
+```
 
 Use a `KafkaProducer` object to send messages and a `Kafka Consumer` to
 receive them:
@@ -59,6 +75,7 @@ results <- list()
 while (identical(results, list())) {
   results <- consumer$consume(num_results = 10, timeout_ms = 1000)
 }
+#> Timeout was reached with no new messages
 #> Timeout was reached with no new messages
 data.table::rbindlist(results)
 #>      topic   key     value

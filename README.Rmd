@@ -31,7 +31,11 @@ install.packages("devtools")
 devtools::install_github("AbrJA/rdkafka")
 ```
 
+**Note:** Only tested on linux at the moment.
+
 ## Example
+
+### Previously
 
 Start the Kafka broker with the `docker compose` command:
 
@@ -39,10 +43,12 @@ Start the Kafka broker with the `docker compose` command:
 (sudo) docker compose up -d
 ```
 
-**Note**: Make sure you are in the directory containing the `docker-compose.yml` file.
+**Note:** Make sure you are in the directory containing the `docker-compose.yml` file.
 
-```{r, eval=FALSE, echo=FALSE}
-sudo docker compose exec broker \
+Create the example topics `Topic1` and `Topic2` with the following command:
+
+```{r, eval=FALSE}
+(sudo) docker compose exec broker \
   kafka-topics --create \
     --topic Topic1 \
     --bootstrap-server localhost:9092 \

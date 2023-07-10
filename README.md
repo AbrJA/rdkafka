@@ -21,21 +21,55 @@ devtools::install_github("AbrJA/rdkafka")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Start the Kafka broker with the `docker compose` command:
+
+``` r
+(sudo) docker compose up -d
+```
+
+**Note**: Make sure you are in the directory containing the
+`docker-compose.yml` file.
+
+Use a `KafkaProducer` object to send messages and a `Kafka Consumer` to
+receive them:
 
 ``` r
 library(rdkafka)
 
-# KafkaProducer
 producer <- KafkaProducer$new(host = "localhost", port = 9092)
-for (counter in seq_len(5)) {
-  producer$produce(topic = "Topic1", keys = sprintf("Key1 %s", counter), values = sprintf("Message1 %s", counter)) |> print()
-  producer$produce(topic = "Topic2", keys = sprintf("Key2 %s", counter), values = sprintf("Message2 %s", counter)) |> print()
-}
+consumer <- KafkaConsumer$new(host = "localhost", port = 9092, group_id = "readme", extra_options = list("auto.offset.reset" = "earliest"))
+```
 
-# KafkaConsumer
-consumer <- KafkaConsumer$new(host = "localhost", port = 9092, group_id = "r", extra_options = list("auto.offset.reset" = "earliest"))
+``` r
+counter <- seq_len(5L)
+producer$produce(topic = "Topic1", keys = sprintf("Key %s", counter), values = sprintf("Message %s", counter)) |> print()
+#> [1] 5
+producer$produce(topic = "Topic2", keys = sprintf("Id %s", counter), values = sprintf("Body %s", counter)) |> print()
+#> [1] 5
+```
+
+``` r
 consumer$subscribe(topics = c("Topic1", "Topic2"))
-results <- consumer$consume(num_results = 10, timeout_ms = 100)
+consumer$get_topics()
+#> [1] "Topic1" "Topic2"
+```
+
+``` r
+results <- list()
+while (identical(results, list())) {
+  results <- consumer$consume(num_results = 10, timeout_ms = 1000)
+}
+#> Timeout was reached with no new messages
 data.table::rbindlist(results)
+#>      topic   key     value
+#>  1: Topic1 Key 1 Message 1
+#>  2: Topic1 Key 2 Message 2
+#>  3: Topic1 Key 3 Message 3
+#>  4: Topic1 Key 4 Message 4
+#>  5: Topic1 Key 5 Message 5
+#>  6: Topic2  Id 1    Body 1
+#>  7: Topic2  Id 2    Body 2
+#>  8: Topic2  Id 3    Body 3
+#>  9: Topic2  Id 4    Body 4
+#> 10: Topic2  Id 5    Body 5
 ```

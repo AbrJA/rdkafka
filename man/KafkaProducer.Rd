@@ -4,8 +4,7 @@
 \alias{KafkaProducer}
 \title{Kakfa Producer}
 \description{
-A producer is an application that is responsible
-for publishing data to topics.
+A producer is an application that is responsible for publishing data to topics.
 }
 \references{
 \href{https://kafka.apache.org/documentation/#intro_producers}{Apache Kafka docs - Producers}
@@ -15,7 +14,7 @@ for publishing data to topics.
 \itemize{
 \item \href{#method-KafkaProducer-new}{\code{KafkaProducer$new()}}
 \item \href{#method-KafkaProducer-produce}{\code{KafkaProducer$produce()}}
-\item \href{#method-KafkaProducer-getHostPort}{\code{KafkaProducer$getHostPort()}}
+\item \href{#method-KafkaProducer-get_servers}{\code{KafkaProducer$get_servers()}}
 \item \href{#method-KafkaProducer-clone}{\code{KafkaProducer$clone()}}
 }
 }
@@ -68,11 +67,11 @@ invisible. Logical. \code{TRUE} if all went good.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KafkaProducer-getHostPort"></a>}}
-\if{latex}{\out{\hypertarget{method-KafkaProducer-getHostPort}{}}}
-\subsection{Method \code{getHostPort()}}{
+\if{html}{\out{<a id="method-KafkaProducer-get_servers"></a>}}
+\if{latex}{\out{\hypertarget{method-KafkaProducer-get_servers}{}}}
+\subsection{Method \code{get_servers()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$getHostPort()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$get_servers()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

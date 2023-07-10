@@ -48,8 +48,8 @@ result
 \item \href{#method-KafkaConsumer-new}{\code{KafkaConsumer$new()}}
 \item \href{#method-KafkaConsumer-subscribe}{\code{KafkaConsumer$subscribe()}}
 \item \href{#method-KafkaConsumer-consume}{\code{KafkaConsumer$consume()}}
-\item \href{#method-KafkaConsumer-getTopics}{\code{KafkaConsumer$getTopics()}}
-\item \href{#method-KafkaConsumer-getHostPort}{\code{KafkaConsumer$getHostPort()}}
+\item \href{#method-KafkaConsumer-get_topics}{\code{KafkaConsumer$get_topics()}}
+\item \href{#method-KafkaConsumer-get_servers}{\code{KafkaConsumer$get_servers()}}
 \item \href{#method-KafkaConsumer-clone}{\code{KafkaConsumer$clone()}}
 }
 }
@@ -121,11 +121,11 @@ invisible. Logical. \code{TRUE} if all went good.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KafkaConsumer-getTopics"></a>}}
-\if{latex}{\out{\hypertarget{method-KafkaConsumer-getTopics}{}}}
-\subsection{Method \code{getTopics()}}{
+\if{html}{\out{<a id="method-KafkaConsumer-get_topics"></a>}}
+\if{latex}{\out{\hypertarget{method-KafkaConsumer-get_topics}{}}}
+\subsection{Method \code{get_topics()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$getTopics()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$get_topics()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
@@ -133,11 +133,11 @@ invisible. Logical. \code{TRUE} if all went good.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KafkaConsumer-getHostPort"></a>}}
-\if{latex}{\out{\hypertarget{method-KafkaConsumer-getHostPort}{}}}
-\subsection{Method \code{getHostPort()}}{
+\if{html}{\out{<a id="method-KafkaConsumer-get_servers"></a>}}
+\if{latex}{\out{\hypertarget{method-KafkaConsumer-get_servers}{}}}
+\subsection{Method \code{get_servers()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$getHostPort()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$get_servers()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

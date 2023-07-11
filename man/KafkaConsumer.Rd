@@ -31,6 +31,7 @@ result
 \item \href{#method-KafkaConsumer-new}{\code{KafkaConsumer$new()}}
 \item \href{#method-KafkaConsumer-subscribe}{\code{KafkaConsumer$subscribe()}}
 \item \href{#method-KafkaConsumer-consume}{\code{KafkaConsumer$consume()}}
+\item \href{#method-KafkaConsumer-consume_partition}{\code{KafkaConsumer$consume_partition()}}
 \item \href{#method-KafkaConsumer-get_topics}{\code{KafkaConsumer$get_topics()}}
 \item \href{#method-KafkaConsumer-get_brokers}{\code{KafkaConsumer$get_brokers()}}
 \item \href{#method-KafkaConsumer-clone}{\code{KafkaConsumer$clone()}}
@@ -75,7 +76,7 @@ invisible logical. \code{TRUE} if all went good.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-integer. Representation of the \code{librdkafka} error code of the response to subscribe. 0 is good.
+invisible integer. Representation of the \code{librdkafka} error code of the response to subscribe. 0 is good.
 }
 }
 \if{html}{\out{<hr>}}
@@ -89,6 +90,36 @@ integer. Representation of the \code{librdkafka} error code of the response to s
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{num_results}}{integer. How many results should be consumed before returning. Will return early if offset is at maximum.}
+
+\item{\code{timeout_ms}}{integer. Number of milliseconds to wait for a new message.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+list. Messages consumed with elements topic, key and payload.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-KafkaConsumer-consume_partition"></a>}}
+\if{latex}{\out{\hypertarget{method-KafkaConsumer-consume_partition}{}}}
+\subsection{Method \code{consume_partition()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$consume_partition(
+  topic,
+  partition = 0,
+  num_results = 100,
+  timeout_ms = 1000
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{topic}}{string.}
+
+\item{\code{partition}}{integer.}
+
 \item{\code{num_results}}{integer. How many results should be consumed before returning. Will return early if offset is at maximum.}
 
 \item{\code{timeout_ms}}{integer. Number of milliseconds to wait for a new message.}

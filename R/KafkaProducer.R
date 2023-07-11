@@ -32,7 +32,8 @@ KafkaProducer <- R6::R6Class(
         #' @return invisible integer. Number of messages succesfully sent.
         #' @export
         produce = function(topic, keys, payloads, partition = 0) {
-            stopifnot(is.character(topic), length(topic) == 1, is.character(keys), is.character(payloads), is.numeric(partition), length(partition) == 1)
+            stopifnot(is.character(topic), length(topic) == 1, is.character(keys), is.character(payloads), is.numeric(partition))
+            if (length(partition) == 1) partition <- rep.int(partition, length(keys))
             invisible(RdProduce(private$producer_ptr, topic, partition, keys, payloads))
         },
         #-----------------------------------------------------------------

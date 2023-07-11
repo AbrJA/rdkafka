@@ -1,13 +1,7 @@
 #include <librdkafka/rdkafkacpp.h>
 #include <Rcpp.h>
 #include "utils.h"
-#include <iostream>
 #include <string>
-#include <cstdlib>
-#include <cstdio>
-#include <csignal>
-#include <thread>
-#include <chrono>
 #include <cstring>
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -26,6 +20,7 @@ SEXP RdKafkaConsumer(Rcpp::StringVector properties, Rcpp::StringVector values) {
       Rcpp::stop("Consumer creation failed with error: " + errstr);
     }
     Rcpp::XPtr<RdKafka::KafkaConsumer> p(consumer, true);
+
     return p;
 }
 
@@ -40,11 +35,12 @@ SEXP RdKafkaConsumer(Rcpp::StringVector properties, Rcpp::StringVector values) {
 int RdSubscribe(SEXP consumerPtr, Rcpp::StringVector rTopics) {
     Rcpp::XPtr<RdKafka::KafkaConsumer> consumer(consumerPtr);
     std::vector<std::string> topics(rTopics.size());
+
     for (int i = 0; i < rTopics.size(); i++){
         topics[i] = rTopics(i);
     }
-    RdKafka::ErrorCode resp;
-    resp = consumer->subscribe(topics);
+    RdKafka::ErrorCode resp = consumer->subscribe(topics);
+
     return static_cast<int>(resp);
 }
 
@@ -58,8 +54,8 @@ int RdSubscribe(SEXP consumerPtr, Rcpp::StringVector rTopics) {
 // [[Rcpp::export]]
 Rcpp::List RdConsume(SEXP consumerPtr, int numResults, int timeoutMs) {
     Rcpp::XPtr<RdKafka::KafkaConsumer> consumer(consumerPtr);
-
     Rcpp::List messages(numResults);
+
     for(int i = 0; i < numResults; i++) {
         RdKafka::Message *msg = consumer->consume(timeoutMs);
         switch(msg->err()) {
@@ -85,4 +81,70 @@ Rcpp::List RdConsume(SEXP consumerPtr, int numResults, int timeoutMs) {
     exit_loop:;
 
     return messages;
+}
+
+//' @title RdAssign
+//' @name RdAssign
+//' @description In process
+//' @param consumerPtr pointer. A reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>.
+//' @param topic string.
+//' @param partition integer.
+//' @return integer. Representation of the librdkafka error code of the response to subscribe. 0 is good.
+// [[Rcpp::export]]
+int RdAssign(SEXP consumerPtr, std::string topic, int partition) {
+  Rcpp::XPtr<RdKafka::KafkaConsumer> consumer(consumerPtr);
+  std::string topicPartition = topic + "[" + std::to_string(partition) + "]";
+  std::vector<RdKafka::TopicPartition*> partitions = { RdKafka::TopicPartition::create(topicPartition, partition) };
+
+  RdKafka::ErrorCode resp = consumer->assign(partitions);
+
+  return static_cast<int>(resp);
+}
+
+//' @title RdConsumePartition
+//' @name RdConsumePartition
+//' @description In process
+//' @param consumerPtr pointer. A reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>.
+//' @param topic string.
+//' @param partition integer.
+//' @return list. With length numReceived and elements topic, partition, offset, key and payload.
+// [[Rcpp::export]]
+Rcpp::List RdConsumePartition(SEXP consumerPtr, std::string topic, int partition, int numResults, int timeoutMs) {
+  Rcpp::XPtr<RdKafka::KafkaConsumer> consumer(consumerPtr);
+  std::string topicPartition = topic + "[" + std::to_string(partition) + "]";
+  std::vector<RdKafka::TopicPartition*> partitions = { RdKafka::TopicPartition::create(topicPartition, partition) };
+  consumer->assign(partitions);
+
+  Rcpp::List messages(numResults);
+  int numReceived = 0;
+
+  while (numReceived < numResults) {
+    RdKafka::Message* msg = consumer->consume(timeoutMs);
+
+    switch (msg->err()) {
+    case RdKafka::ERR_NO_ERROR: {
+      Rcpp::List message = Rcpp::List::create(
+        Rcpp::Named("topic") = msg->topic_name(),
+        Rcpp::Named("partition") = msg->partition(),
+        Rcpp::Named("offset") = msg->offset(),
+        Rcpp::Named("key") = *msg->key(),
+        Rcpp::Named("payload") = static_cast<const char*>(msg->payload())
+      );
+      messages[numReceived] = message;
+      numReceived++;
+      break;
+    }
+    case RdKafka::ERR__PARTITION_EOF:
+      goto exit_loop;
+    case RdKafka::ERR__TIMED_OUT:
+      goto exit_loop;
+    default:
+      Rcpp::Rcout << "Consume failed: " << msg->errstr().c_str() << std::endl;
+    goto exit_loop;
+    }
+  }
+
+  exit_loop:
+    consumer->close();
+  return messages;
 }

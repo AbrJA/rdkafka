@@ -1,11 +1,7 @@
 #include <librdkafka/rdkafkacpp.h>
 #include <Rcpp.h>
 #include "utils.h"
-#include <iostream>
 #include <string>
-#include <cstdlib>
-#include <cstdio>
-#include <csignal>
 #include <cstring>
 
 //' @title RdKafkaProducer
@@ -38,26 +34,32 @@ SEXP RdKafkaProducer(Rcpp::StringVector properties, Rcpp::StringVector values) {
 // [[Rcpp::export]]
 int RdProduce(SEXP producerPtr,
             SEXP topic,
-            Rcpp::IntegerVector partition,
+            Rcpp::IntegerVector partitions,
             Rcpp::StringVector keys,
             Rcpp::StringVector payloads) {
     Rcpp::XPtr<RdKafka::Producer> producer(producerPtr);
     std::string s_topic = Rcpp::as<std::string>(topic);
-
-    if (keys.size() != payloads.size()) {
-      Rcpp::Rcout << "keys and payloads must be same size" << std::endl;
-      return -1;
-    }
     int numMsgs = keys.size();
     int numSent = 0;
 
+    if (numMsgs != payloads.size()) {
+      Rcpp::Rcout << "keys and payloads must be same size" << std::endl;
+      return -1;
+    }
+
+    if (numMsgs != partitions.size()) {
+      Rcpp::Rcout << "partitions, keys, and payloads must have the same size" << std::endl;
+      return -1;
+    }
+
     for (int i = 0; i < numMsgs; i++) {
-        std::string s_value = Rcpp::as<std::string>(payloads[i]);
+        std::string s_payload = Rcpp::as<std::string>(payloads[i]);
         std::string s_key = Rcpp::as<std::string>(keys[i]);
+        int partition = partitions[i];
 
         RdKafka::ErrorCode resp = producer->produce(
-            s_topic, partition[0], RdKafka::Producer::RK_MSG_COPY,
-            const_cast<char *>(s_value.c_str()), s_value.size(),
+            s_topic, partition, RdKafka::Producer::RK_MSG_COPY,
+            const_cast<char *>(s_payload.c_str()), s_payload.size(),
             const_cast<char *>(s_key.c_str()), s_key.size(),
             0, NULL
         );

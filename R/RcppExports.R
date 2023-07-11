@@ -33,6 +33,28 @@ RdConsume <- function(consumerPtr, numResults, timeoutMs) {
     .Call(`_rdkafka_RdConsume`, consumerPtr, numResults, timeoutMs)
 }
 
+#' @title RdAssign
+#' @name RdAssign
+#' @description In process
+#' @param consumerPtr pointer. A reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>.
+#' @param topic string.
+#' @param partition integer.
+#' @return integer. Representation of the librdkafka error code of the response to subscribe. 0 is good.
+RdAssign <- function(consumerPtr, topic, partition) {
+    .Call(`_rdkafka_RdAssign`, consumerPtr, topic, partition)
+}
+
+#' @title RdConsumePartition
+#' @name RdConsumePartition
+#' @description In process
+#' @param consumerPtr pointer. A reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>.
+#' @param topic string.
+#' @param partition integer.
+#' @return list. With length numReceived and elements topic, partition, offset, key and payload.
+RdConsumePartition <- function(consumerPtr, topic, partition, numResults, timeoutMs) {
+    .Call(`_rdkafka_RdConsumePartition`, consumerPtr, topic, partition, numResults, timeoutMs)
+}
+
 #' @title RdKafkaProducer
 #' @name RdKafkaProducer
 #' @description Creates an Rcpp::XPtr<RdKafka::Producer>. For more details on options see \href{https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}.
@@ -52,7 +74,7 @@ RdKafkaProducer <- function(properties, values) {
 #' @param keys string vector. With all the keys for the messages.
 #' @param payloads string vector. With all the payloads for the messages. Must be of same length as keys.
 #' @return returns integer. Number of messages succesfully sent.
-RdProduce <- function(producerPtr, topic, partition, keys, payloads) {
-    .Call(`_rdkafka_RdProduce`, producerPtr, topic, partition, keys, payloads)
+RdProduce <- function(producerPtr, topic, partitions, keys, payloads) {
+    .Call(`_rdkafka_RdProduce`, producerPtr, topic, partitions, keys, payloads)
 }
 

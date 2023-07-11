@@ -4,18 +4,18 @@
 \alias{RdProduce}
 \title{RdProduce}
 \usage{
-RdProduce(producerPtr, topic, partition, keys, payloads)
+RdProduce(producerPtr, topic, partitions, keys, payloads)
 }
 \arguments{
 \item{producerPtr}{pointer. A reference to a Rcpp::XPtr\url{RdKafka::Producer}}
 
 \item{topic}{string. Indicating the topic to produce to.}
 
-\item{partition}{integer. Indicating the partition to produce to.}
-
 \item{keys}{string vector. With all the keys for the messages.}
 
 \item{payloads}{string vector. With all the payloads for the messages. Must be of same length as keys.}
+
+\item{partition}{integer. Indicating the partition to produce to.}
 }
 \value{
 returns integer. Number of messages succesfully sent.

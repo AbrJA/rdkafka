@@ -47,8 +47,7 @@ KafkaConsumer <- R6::R6Class(
             stopifnot(is.character(topics))
             result <- RdSubscribe(private$consumer_ptr, topics)
             if (result == 0) {
-                ### Test this
-                private$topics <- c(private$topics, topics)
+                private$topics <- topics
             }
             invisible(result)
         },
@@ -62,6 +61,18 @@ KafkaConsumer <- R6::R6Class(
             stopifnot(is.numeric(num_results), is.numeric(timeout_ms))
             if (is.null(private$topics)) stop("Consumer is not suscribed to any topic")
             Filter(function(msg) !is.null(msg), RdConsume(private$consumer_ptr, num_results, timeout_ms))
+        },
+        #-----------------------------------------------------------------
+        #' @param topic string.
+        #' @param partition integer.
+        #' @param num_results integer. How many results should be consumed before returning. Will return early if offset is at maximum.
+        #' @param timeout_ms integer. Number of milliseconds to wait for a new message.
+        #'
+        #' @return list. Messages consumed with elements topic, key and payload.
+        #' @export
+        consume_partition = function(topic, partition = 0, num_results = 100, timeout_ms = 1000) {
+            RdAssign(private$consumer_ptr, topic, partition)
+            # Filter(function(msg) !is.null(msg), RdConsumePartition(private$consumer_ptr, topic, partition, num_results, timeout_ms))
         },
         #-----------------------------------------------------------------
         #' @return string vector. Listing the topics subscribed to.

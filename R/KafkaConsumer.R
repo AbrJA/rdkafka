@@ -41,7 +41,7 @@ KafkaConsumer <- R6::R6Class(
         #-----------------------------------------------------------------
         #' @param topics string vector. Listing the topics to subscribe to.
         #'
-        #' @return integer. Representation of the `librdkafka` error code of the response to subscribe. 0 is good.
+        #' @return invisible integer. Representation of the `librdkafka` error code of the response to subscribe. 0 is good.
         #' @export
         subscribe = function(topics) {
             stopifnot(is.character(topics))
@@ -50,7 +50,7 @@ KafkaConsumer <- R6::R6Class(
                 ### Test this
                 private$topics <- c(private$topics, topics)
             }
-            result
+            invisible(result)
         },
         #-----------------------------------------------------------------
         #' @param num_results integer. How many results should be consumed before returning. Will return early if offset is at maximum.

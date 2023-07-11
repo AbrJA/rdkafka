@@ -52,20 +52,21 @@ receive them:
 ``` r
 library(rdkafka)
 
-producer <- KafkaProducer$new(host = "localhost", port = 9092)
-consumer <- KafkaConsumer$new(host = "localhost", port = 9092, group_id = "readme", extra_options = list("auto.offset.reset" = "earliest"))
+producer <- KafkaProducer$new(brokers = "localhost:9092")
+consumer <- KafkaConsumer$new(brokers = "localhost:9092", group_id = "readme", extra_options = list("auto.offset.reset" = "earliest"))
 ```
 
 ``` r
 counter <- seq_len(5L)
-producer$produce(topic = "Topic1", keys = sprintf("Key %s", counter), values = sprintf("Message %s", counter)) |> print()
+producer$produce(topic = "Topic1", keys = sprintf("Key %s", counter), payloads = sprintf("Message %s", counter)) |> print()
 #> [1] 5
-producer$produce(topic = "Topic2", keys = sprintf("Id %s", counter), values = sprintf("Body %s", counter)) |> print()
+producer$produce(topic = "Topic2", keys = sprintf("Id %s", counter), payloads = sprintf("Body %s", counter)) |> print()
 #> [1] 5
 ```
 
 ``` r
 consumer$subscribe(topics = c("Topic1", "Topic2"))
+#> [1] 0
 consumer$get_topics()
 #> [1] "Topic1" "Topic2"
 ```
@@ -78,7 +79,7 @@ while (identical(results, list())) {
 #> Timeout was reached with no new messages
 #> Timeout was reached with no new messages
 data.table::rbindlist(results)
-#>      topic   key     value
+#>      topic   key   payload
 #>  1: Topic1 Key 1 Message 1
 #>  2: Topic1 Key 2 Message 2
 #>  3: Topic1 Key 3 Message 3
@@ -90,3 +91,11 @@ data.table::rbindlist(results)
 #>  9: Topic2  Id 4    Body 4
 #> 10: Topic2  Id 5    Body 5
 ```
+
+## Configuration
+
+`librdkafka` offers extensive customization options. For a comprehensive
+list of supported properties, please refer to the
+[CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md)
+document. To configure a specific property, simply provide a conf object
+to either KafkaProducer or KafkaConsumer.

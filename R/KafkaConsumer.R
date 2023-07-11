@@ -52,6 +52,16 @@ KafkaConsumer <- R6::R6Class(
             invisible(result)
         },
         #-----------------------------------------------------------------
+        #' @param topic string. Listing the topics to subscribe to.
+        #' @param partition integer. Indicating the partition to produce to.
+        #' @param offset integer. To do ...
+        #' @return invisible integer. Representation of the `librdkafka` error code of the response to subscribe. 0 is good.
+        #' @export
+        assign = function(topic, partition = 0, offset = 0) {
+            result <- RdAssign(private$consumer_ptr, topic, partition, offset)
+            invisible(result)
+        },
+        #-----------------------------------------------------------------
         #' @param num_results integer. How many results should be consumed before returning. Will return early if offset is at maximum.
         #' @param timeout_ms integer. Number of milliseconds to wait for a new message.
         #'
@@ -67,12 +77,12 @@ KafkaConsumer <- R6::R6Class(
         #' @param partition integer.
         #' @param num_results integer. How many results should be consumed before returning. Will return early if offset is at maximum.
         #' @param timeout_ms integer. Number of milliseconds to wait for a new message.
+        #' @param offset integer.
         #'
         #' @return list. Messages consumed with elements topic, key and payload.
         #' @export
-        consume_partition = function(topic, partition = 0, num_results = 100, timeout_ms = 1000) {
-            RdAssign(private$consumer_ptr, topic, partition)
-            # Filter(function(msg) !is.null(msg), RdConsumePartition(private$consumer_ptr, topic, partition, num_results, timeout_ms))
+        consume_partition = function(num_results = 100, timeout_ms = 1000) {
+            Filter(function(msg) !is.null(msg), RdConsumePartition(private$consumer_ptr, num_results, timeout_ms))
         },
         #-----------------------------------------------------------------
         #' @return string vector. Listing the topics subscribed to.

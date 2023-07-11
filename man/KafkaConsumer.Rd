@@ -30,6 +30,7 @@ result
 \itemize{
 \item \href{#method-KafkaConsumer-new}{\code{KafkaConsumer$new()}}
 \item \href{#method-KafkaConsumer-subscribe}{\code{KafkaConsumer$subscribe()}}
+\item \href{#method-KafkaConsumer-assign}{\code{KafkaConsumer$assign()}}
 \item \href{#method-KafkaConsumer-consume}{\code{KafkaConsumer$consume()}}
 \item \href{#method-KafkaConsumer-consume_partition}{\code{KafkaConsumer$consume_partition()}}
 \item \href{#method-KafkaConsumer-get_topics}{\code{KafkaConsumer$get_topics()}}
@@ -80,6 +81,29 @@ invisible integer. Representation of the \code{librdkafka} error code of the res
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-KafkaConsumer-assign"></a>}}
+\if{latex}{\out{\hypertarget{method-KafkaConsumer-assign}{}}}
+\subsection{Method \code{assign()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$assign(topic, partition = 0, offset = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{topic}}{string. Listing the topics to subscribe to.}
+
+\item{\code{partition}}{integer. Indicating the partition to produce to.}
+
+\item{\code{offset}}{integer. To do ...}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+invisible integer. Representation of the \code{librdkafka} error code of the response to subscribe. 0 is good.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KafkaConsumer-consume"></a>}}
 \if{latex}{\out{\hypertarget{method-KafkaConsumer-consume}{}}}
 \subsection{Method \code{consume()}}{
@@ -105,24 +129,21 @@ list. Messages consumed with elements topic, key and payload.
 \if{latex}{\out{\hypertarget{method-KafkaConsumer-consume_partition}{}}}
 \subsection{Method \code{consume_partition()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$consume_partition(
-  topic,
-  partition = 0,
-  num_results = 100,
-  timeout_ms = 1000
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$consume_partition(num_results = 100, timeout_ms = 1000)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{num_results}}{integer. How many results should be consumed before returning. Will return early if offset is at maximum.}
+
+\item{\code{timeout_ms}}{integer. Number of milliseconds to wait for a new message.}
+
 \item{\code{topic}}{string.}
 
 \item{\code{partition}}{integer.}
 
-\item{\code{num_results}}{integer. How many results should be consumed before returning. Will return early if offset is at maximum.}
-
-\item{\code{timeout_ms}}{integer. Number of milliseconds to wait for a new message.}
+\item{\code{offset}}{integer.}
 }
 \if{html}{\out{</div>}}
 }

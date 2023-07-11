@@ -4,7 +4,7 @@
 \alias{RdAssign}
 \title{RdAssign}
 \usage{
-RdAssign(consumerPtr, topic, partition)
+RdAssign(consumerPtr, topic, partition, offset)
 }
 \arguments{
 \item{consumerPtr}{pointer. A reference to a Rcpp::XPtr\url{RdKafka::KafkaConsumer}.}

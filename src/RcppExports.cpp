@@ -48,30 +48,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // RdAssign
-int RdAssign(SEXP consumerPtr, std::string topic, int partition);
-RcppExport SEXP _rdkafka_RdAssign(SEXP consumerPtrSEXP, SEXP topicSEXP, SEXP partitionSEXP) {
+int RdAssign(SEXP consumerPtr, std::string topic, int partition, int offset);
+RcppExport SEXP _rdkafka_RdAssign(SEXP consumerPtrSEXP, SEXP topicSEXP, SEXP partitionSEXP, SEXP offsetSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type consumerPtr(consumerPtrSEXP);
     Rcpp::traits::input_parameter< std::string >::type topic(topicSEXP);
     Rcpp::traits::input_parameter< int >::type partition(partitionSEXP);
-    rcpp_result_gen = Rcpp::wrap(RdAssign(consumerPtr, topic, partition));
+    Rcpp::traits::input_parameter< int >::type offset(offsetSEXP);
+    rcpp_result_gen = Rcpp::wrap(RdAssign(consumerPtr, topic, partition, offset));
     return rcpp_result_gen;
 END_RCPP
 }
 // RdConsumePartition
-Rcpp::List RdConsumePartition(SEXP consumerPtr, std::string topic, int partition, int numResults, int timeoutMs);
-RcppExport SEXP _rdkafka_RdConsumePartition(SEXP consumerPtrSEXP, SEXP topicSEXP, SEXP partitionSEXP, SEXP numResultsSEXP, SEXP timeoutMsSEXP) {
+Rcpp::List RdConsumePartition(SEXP consumerPtr, int numResults, int timeoutMs);
+RcppExport SEXP _rdkafka_RdConsumePartition(SEXP consumerPtrSEXP, SEXP numResultsSEXP, SEXP timeoutMsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type consumerPtr(consumerPtrSEXP);
-    Rcpp::traits::input_parameter< std::string >::type topic(topicSEXP);
-    Rcpp::traits::input_parameter< int >::type partition(partitionSEXP);
     Rcpp::traits::input_parameter< int >::type numResults(numResultsSEXP);
     Rcpp::traits::input_parameter< int >::type timeoutMs(timeoutMsSEXP);
-    rcpp_result_gen = Rcpp::wrap(RdConsumePartition(consumerPtr, topic, partition, numResults, timeoutMs));
+    rcpp_result_gen = Rcpp::wrap(RdConsumePartition(consumerPtr, numResults, timeoutMs));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -107,8 +106,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rdkafka_RdKafkaConsumer", (DL_FUNC) &_rdkafka_RdKafkaConsumer, 2},
     {"_rdkafka_RdSubscribe", (DL_FUNC) &_rdkafka_RdSubscribe, 2},
     {"_rdkafka_RdConsume", (DL_FUNC) &_rdkafka_RdConsume, 3},
-    {"_rdkafka_RdAssign", (DL_FUNC) &_rdkafka_RdAssign, 3},
-    {"_rdkafka_RdConsumePartition", (DL_FUNC) &_rdkafka_RdConsumePartition, 5},
+    {"_rdkafka_RdAssign", (DL_FUNC) &_rdkafka_RdAssign, 4},
+    {"_rdkafka_RdConsumePartition", (DL_FUNC) &_rdkafka_RdConsumePartition, 3},
     {"_rdkafka_RdKafkaProducer", (DL_FUNC) &_rdkafka_RdKafkaProducer, 2},
     {"_rdkafka_RdProduce", (DL_FUNC) &_rdkafka_RdProduce, 5},
     {NULL, NULL, 0}

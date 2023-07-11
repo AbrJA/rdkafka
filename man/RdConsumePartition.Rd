@@ -4,14 +4,14 @@
 \alias{RdConsumePartition}
 \title{RdConsumePartition}
 \usage{
-RdConsumePartition(consumerPtr, topic, partition, numResults, timeoutMs)
+RdConsumePartition(consumerPtr, numResults, timeoutMs)
 }
 \arguments{
 \item{consumerPtr}{pointer. A reference to a Rcpp::XPtr\url{RdKafka::KafkaConsumer}.}
 
-\item{topic}{string.}
+\item{numResults}{integer. How many results should be consumed before returning. Will return early if offset is at maximum.}
 
-\item{partition}{integer.}
+\item{timeoutMs}{integer. Number of milliseconds to wait for a new message.}
 }
 \value{
 list. With length numReceived and elements topic, partition, offset, key and payload.

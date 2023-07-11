@@ -91,10 +91,9 @@ Rcpp::List RdConsume(SEXP consumerPtr, int numResults, int timeoutMs) {
 //' @param partition integer.
 //' @return integer. Representation of the librdkafka error code of the response to subscribe. 0 is good.
 // [[Rcpp::export]]
-int RdAssign(SEXP consumerPtr, std::string topic, int partition) {
+int RdAssign(SEXP consumerPtr, std::string topic, int partition, int offset) {
   Rcpp::XPtr<RdKafka::KafkaConsumer> consumer(consumerPtr);
-  std::string topicPartition = topic + "[" + std::to_string(partition) + "]";
-  std::vector<RdKafka::TopicPartition*> partitions = { RdKafka::TopicPartition::create(topicPartition, partition) };
+  std::vector<RdKafka::TopicPartition*> partitions = { RdKafka::TopicPartition::create(topic, partition, offset) };
 
   RdKafka::ErrorCode resp = consumer->assign(partitions);
 
@@ -105,46 +104,39 @@ int RdAssign(SEXP consumerPtr, std::string topic, int partition) {
 //' @name RdConsumePartition
 //' @description In process
 //' @param consumerPtr pointer. A reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>.
-//' @param topic string.
-//' @param partition integer.
+//' @param numResults integer. How many results should be consumed before returning. Will return early if offset is at maximum.
+//' @param timeoutMs integer. Number of milliseconds to wait for a new message.
 //' @return list. With length numReceived and elements topic, partition, offset, key and payload.
 // [[Rcpp::export]]
-Rcpp::List RdConsumePartition(SEXP consumerPtr, std::string topic, int partition, int numResults, int timeoutMs) {
+Rcpp::List RdConsumePartition(SEXP consumerPtr, int numResults, int timeoutMs) {
   Rcpp::XPtr<RdKafka::KafkaConsumer> consumer(consumerPtr);
-  std::string topicPartition = topic + "[" + std::to_string(partition) + "]";
-  std::vector<RdKafka::TopicPartition*> partitions = { RdKafka::TopicPartition::create(topicPartition, partition) };
-  consumer->assign(partitions);
-
   Rcpp::List messages(numResults);
-  int numReceived = 0;
 
-  while (numReceived < numResults) {
-    RdKafka::Message* msg = consumer->consume(timeoutMs);
-
-    switch (msg->err()) {
+  for(int i = 0; i < numResults; i++) {
+    RdKafka::Message *msg = consumer->consume(timeoutMs);
+    switch(msg->err()) {
     case RdKafka::ERR_NO_ERROR: {
-      Rcpp::List message = Rcpp::List::create(
-        Rcpp::Named("topic") = msg->topic_name(),
-        Rcpp::Named("partition") = msg->partition(),
-        Rcpp::Named("offset") = msg->offset(),
-        Rcpp::Named("key") = *msg->key(),
-        Rcpp::Named("payload") = static_cast<const char*>(msg->payload())
-      );
-      messages[numReceived] = message;
-      numReceived++;
+      Rcpp::List message = Rcpp::List::create(Rcpp::Named("topic") = msg->topic_name(),
+                                              Rcpp::Named("partition") = msg->partition(),
+                                              Rcpp::Named("offset") = msg->offset(),
+                                              Rcpp::Named("key") = *msg->key(),
+                                              Rcpp::Named("payload") = static_cast<const char *>(msg->payload()));
+      messages[i] = message;
       break;
-    }
-    case RdKafka::ERR__PARTITION_EOF:
+    } case RdKafka::ERR__PARTITION_EOF: {
+      Rcpp::Rcout << "No additional messages available" << std::endl;
       goto exit_loop;
-    case RdKafka::ERR__TIMED_OUT:
+    } case RdKafka::ERR__TIMED_OUT: {
+      Rcpp::Rcout << "Timeout was reached with no new messages" << std::endl;
       goto exit_loop;
-    default:
+    } default: {
+      /* Errors */
       Rcpp::Rcout << "Consume failed: " << msg->errstr().c_str() << std::endl;
-    goto exit_loop;
+      goto exit_loop;
+    }
     }
   }
+  exit_loop:;
 
-  exit_loop:
-    consumer->close();
   return messages;
 }

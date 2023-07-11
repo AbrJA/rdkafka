@@ -30,8 +30,8 @@ KafkaConsumer <- R6::R6Class(
         #'
         #' @return invisible logical. `TRUE` if all went good.
         #' @export
-        initialize = function(brokers, group_id, extra_options = list()) {
-            stopifnot(is.character(brokers))
+        initialize = function(brokers = "localhost:9092", group_id = "rdkafka", extra_options = list()) {
+            stopifnot(is.character(brokers), is.character(group_id), is.list(extra_options), length(group_id) == 1L)
             properties <- c("metadata.broker.list", "group.id", names(extra_options))
             values <- c(paste0(brokers, collapse = ","), group_id, unlist(extra_options, use.names = FALSE))
             private$consumer_ptr <- RdKafkaConsumer(properties, values)
@@ -43,22 +43,33 @@ KafkaConsumer <- R6::R6Class(
         #'
         #' @return invisible integer. Representation of the `librdkafka` error code of the response to subscribe. 0 is good.
         #' @export
-        subscribe = function(topics) {
+        subscribe = function(topics = "Topic") {
             stopifnot(is.character(topics))
             result <- RdSubscribe(private$consumer_ptr, topics)
-            if (result == 0) {
+            if (result == 0L) {
+                private$offsets <- NULL
+                private$partitions <- NULL
                 private$topics <- topics
             }
             invisible(result)
         },
         #-----------------------------------------------------------------
-        #' @param topic string. Listing the topics to subscribe to.
-        #' @param partition integer. Indicating the partition to produce to.
-        #' @param offset integer. To do ...
+        #' @param topics string vector. Listing the topics to subscribe to.
+        #' @param partitions integer vector. Indicating the partitions to subscribe to. Must be of same length as topics or length equal 1.
+        #' @param offsets integer vector. With the offsets where to start. Must be of same length as topics or length equal 1.
         #' @return invisible integer. Representation of the `librdkafka` error code of the response to subscribe. 0 is good.
         #' @export
-        assign = function(topic, partition = 0, offset = 0) {
-            result <- RdAssign(private$consumer_ptr, topic, partition, offset)
+        assign = function(topics = "Topic", partitions = rep.int(0L, length(topics)), offsets = rep.int(0L, length(topics))) {
+            stopifnot(is.character(topics), is.numeric(partitions), is.numeric(offsets))
+            if (length(partitions) == 1L) partitions <- rep.int(partitions, length(topics))
+            if (length(offsets) == 1L) offsets <- rep.int(offsets, length(topics))
+            stopifnot(length(partitions) == length(topics), length(offsets) == length(topics))
+            result <- RdAssign(private$consumer_ptr, topics, partitions, offsets)
+            if (result == 0L) {
+                private$offsets <- offsets
+                private$partitions <- partitions
+                private$topics <- topics
+            }
             invisible(result)
         },
         #-----------------------------------------------------------------
@@ -67,22 +78,22 @@ KafkaConsumer <- R6::R6Class(
         #'
         #' @return list. Messages consumed with elements topic, key and payload.
         #' @export
-        consume = function(num_results = 100, timeout_ms = 1000) {
+        consume = function(num_results = 100L, timeout_ms = 1000L) {
             stopifnot(is.numeric(num_results), is.numeric(timeout_ms))
             if (is.null(private$topics)) stop("Consumer is not suscribed to any topic")
             Filter(function(msg) !is.null(msg), RdConsume(private$consumer_ptr, num_results, timeout_ms))
         },
         #-----------------------------------------------------------------
-        #' @param topic string.
-        #' @param partition integer.
-        #' @param num_results integer. How many results should be consumed before returning. Will return early if offset is at maximum.
-        #' @param timeout_ms integer. Number of milliseconds to wait for a new message.
-        #' @param offset integer.
-        #'
-        #' @return list. Messages consumed with elements topic, key and payload.
+        #' @return string vector. Listing the offsets subscribed to.
         #' @export
-        consume_partition = function(num_results = 100, timeout_ms = 1000) {
-            Filter(function(msg) !is.null(msg), RdConsumePartition(private$consumer_ptr, num_results, timeout_ms))
+        get_offsets = function() {
+            private$offsets
+        },
+        #-----------------------------------------------------------------
+        #' @return string vector. Listing the partitions subscribed to.
+        #' @export
+        get_partitions = function() {
+            private$partitions
         },
         #-----------------------------------------------------------------
         #' @return string vector. Listing the topics subscribed to.
@@ -100,8 +111,10 @@ KafkaConsumer <- R6::R6Class(
         }
     ),
     private = list(
-        brokers = NULL,
+        offsets = NULL,
+        partitions = NULL,
         topics = NULL,
+        brokers = NULL,
         consumer_ptr = NULL
     )
 )

@@ -23,14 +23,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // RdSubscribe
-int RdSubscribe(SEXP consumerPtr, Rcpp::StringVector rTopics);
-RcppExport SEXP _rdkafka_RdSubscribe(SEXP consumerPtrSEXP, SEXP rTopicsSEXP) {
+int RdSubscribe(SEXP consumerPtr, Rcpp::StringVector topics);
+RcppExport SEXP _rdkafka_RdSubscribe(SEXP consumerPtrSEXP, SEXP topicsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type consumerPtr(consumerPtrSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type rTopics(rTopicsSEXP);
-    rcpp_result_gen = Rcpp::wrap(RdSubscribe(consumerPtr, rTopics));
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type topics(topicsSEXP);
+    rcpp_result_gen = Rcpp::wrap(RdSubscribe(consumerPtr, topics));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -47,33 +47,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// RdAssign
-int RdAssign(SEXP consumerPtr, std::string topic, int partition, int offset);
-RcppExport SEXP _rdkafka_RdAssign(SEXP consumerPtrSEXP, SEXP topicSEXP, SEXP partitionSEXP, SEXP offsetSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type consumerPtr(consumerPtrSEXP);
-    Rcpp::traits::input_parameter< std::string >::type topic(topicSEXP);
-    Rcpp::traits::input_parameter< int >::type partition(partitionSEXP);
-    Rcpp::traits::input_parameter< int >::type offset(offsetSEXP);
-    rcpp_result_gen = Rcpp::wrap(RdAssign(consumerPtr, topic, partition, offset));
-    return rcpp_result_gen;
-END_RCPP
-}
-// RdConsumePartition
-Rcpp::List RdConsumePartition(SEXP consumerPtr, int numResults, int timeoutMs);
-RcppExport SEXP _rdkafka_RdConsumePartition(SEXP consumerPtrSEXP, SEXP numResultsSEXP, SEXP timeoutMsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type consumerPtr(consumerPtrSEXP);
-    Rcpp::traits::input_parameter< int >::type numResults(numResultsSEXP);
-    Rcpp::traits::input_parameter< int >::type timeoutMs(timeoutMsSEXP);
-    rcpp_result_gen = Rcpp::wrap(RdConsumePartition(consumerPtr, numResults, timeoutMs));
-    return rcpp_result_gen;
-END_RCPP
-}
 // RdKafkaProducer
 SEXP RdKafkaProducer(Rcpp::StringVector properties, Rcpp::StringVector values);
 RcppExport SEXP _rdkafka_RdKafkaProducer(SEXP propertiesSEXP, SEXP valuesSEXP) {
@@ -87,17 +60,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // RdProduce
-int RdProduce(SEXP producerPtr, SEXP topic, Rcpp::IntegerVector partitions, Rcpp::StringVector keys, Rcpp::StringVector payloads);
-RcppExport SEXP _rdkafka_RdProduce(SEXP producerPtrSEXP, SEXP topicSEXP, SEXP partitionsSEXP, SEXP keysSEXP, SEXP payloadsSEXP) {
+int RdProduce(SEXP producerPtr, Rcpp::StringVector keys, Rcpp::StringVector payloads, Rcpp::StringVector topics, Rcpp::IntegerVector partitions);
+RcppExport SEXP _rdkafka_RdProduce(SEXP producerPtrSEXP, SEXP keysSEXP, SEXP payloadsSEXP, SEXP topicsSEXP, SEXP partitionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type producerPtr(producerPtrSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type topic(topicSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type partitions(partitionsSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type keys(keysSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type payloads(payloadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(RdProduce(producerPtr, topic, partitions, keys, payloads));
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type topics(topicsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type partitions(partitionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(RdProduce(producerPtr, keys, payloads, topics, partitions));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -106,8 +79,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rdkafka_RdKafkaConsumer", (DL_FUNC) &_rdkafka_RdKafkaConsumer, 2},
     {"_rdkafka_RdSubscribe", (DL_FUNC) &_rdkafka_RdSubscribe, 2},
     {"_rdkafka_RdConsume", (DL_FUNC) &_rdkafka_RdConsume, 3},
-    {"_rdkafka_RdAssign", (DL_FUNC) &_rdkafka_RdAssign, 4},
-    {"_rdkafka_RdConsumePartition", (DL_FUNC) &_rdkafka_RdConsumePartition, 3},
     {"_rdkafka_RdKafkaProducer", (DL_FUNC) &_rdkafka_RdKafkaProducer, 2},
     {"_rdkafka_RdProduce", (DL_FUNC) &_rdkafka_RdProduce, 5},
     {NULL, NULL, 0}

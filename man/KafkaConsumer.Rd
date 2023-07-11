@@ -4,11 +4,7 @@
 \alias{KafkaConsumer}
 \title{Kakfa Consumer}
 \description{
-A consumer is an application which subscribes to one or more topics and processes
-new messages as they arrive on that topic.
-Consumers may also be instructed to process older messages.
-Consumers belong to "consumer groups". Consumer groups with more than one consumer instance can be
-used to parallelize message processing and / or distribute it over multiple physical machines.
+A consumer is an application which subscribes to one or more topics and processes new messages as they arrive on that topic.
 }
 \examples{
 \dontrun{
@@ -16,27 +12,14 @@ library(rdkafka)
 
 # KafkaProducer
 producer <- KafkaProducer$new(host = "localhost", port = 9092)
-producer$produce(topic = "MyTest",
-                 key = "Message 1",
-                 value = "My First Message")
-# Number of messages successfuly sent is returned
-# [1] 1
-
+producer$produce(topic = "MyTest", key = "Message 1", value = "My First Message")
 
 # KafkaConsumer
 consumer <- KafkaConsumer$new(host = "localhost", port = 9092, group_id = "test",
 extra_options = list(`auto.offset.reset` = "earliest"))
 consumer$subscribe(topics = "MyTest")
-result <- consumer$consume(topic = "MyTest")
-
+result <- consumer$consume()
 result
-# Consumed messages are returned in a list(list(key,val)) format
-# [[1]]
-# [[1]]$key
-# [1] "myKey"
-#
-# [[1]]$payload
-# [1] "My First Message"
 }
 }
 \references{
@@ -49,7 +32,7 @@ result
 \item \href{#method-KafkaConsumer-subscribe}{\code{KafkaConsumer$subscribe()}}
 \item \href{#method-KafkaConsumer-consume}{\code{KafkaConsumer$consume()}}
 \item \href{#method-KafkaConsumer-get_topics}{\code{KafkaConsumer$get_topics()}}
-\item \href{#method-KafkaConsumer-get_servers}{\code{KafkaConsumer$get_servers()}}
+\item \href{#method-KafkaConsumer-get_brokers}{\code{KafkaConsumer$get_brokers()}}
 \item \href{#method-KafkaConsumer-clone}{\code{KafkaConsumer$clone()}}
 }
 }
@@ -58,24 +41,22 @@ result
 \if{latex}{\out{\hypertarget{method-KafkaConsumer-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$new(host, port, group_id, extra_options = list())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$new(brokers, group_id, extra_options = list())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{host}}{string}
+\item{\code{brokers}}{string vector. Initial list of brokers with the structure broker host or host:port.}
 
-\item{\code{port}}{string}
+\item{\code{group_id}}{string. Client group id. All clients sharing the same group.id belong to the same group.}
 
-\item{\code{group_id}}{string}
-
-\item{\code{extra_options}}{list}
+\item{\code{extra_options}}{list. Indicating option properties and option values to parameterize the RdKafka::Consumer.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-invisible. Logical. \code{TRUE} if all went good.
+invisible logical. \code{TRUE} if all went good.
 }
 }
 \if{html}{\out{<hr>}}
@@ -89,12 +70,12 @@ invisible. Logical. \code{TRUE} if all went good.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{topics}}{string vector}
+\item{\code{topics}}{string vector. Listing the topics to subscribe to.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-@return invisible. Logical. \code{TRUE} if all went good.
+integer. Representation of the \code{librdkafka} error code of the response to subscribe. 0 is good.
 }
 }
 \if{html}{\out{<hr>}}
@@ -108,16 +89,14 @@ invisible. Logical. \code{TRUE} if all went good.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{num_results}}{integer}
+\item{\code{num_results}}{integer. How many results should be consumed before returning. Will return early if offset is at maximum.}
 
-\item{\code{timeout_ms}}{integer}
-
-\item{\code{topic}}{string}
+\item{\code{timeout_ms}}{integer. Number of milliseconds to wait for a new message.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-invisible. Logical. \code{TRUE} if all went good.
+list. Messages consumed with elements topic, key and payload.
 }
 }
 \if{html}{\out{<hr>}}
@@ -129,19 +108,19 @@ invisible. Logical. \code{TRUE} if all went good.
 }
 
 \subsection{Returns}{
-invisible. Logical. \code{TRUE} if all went good.
+string vector. Listing the topics subscribed to.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KafkaConsumer-get_servers"></a>}}
-\if{latex}{\out{\hypertarget{method-KafkaConsumer-get_servers}{}}}
-\subsection{Method \code{get_servers()}}{
+\if{html}{\out{<a id="method-KafkaConsumer-get_brokers"></a>}}
+\if{latex}{\out{\hypertarget{method-KafkaConsumer-get_brokers}{}}}
+\subsection{Method \code{get_brokers()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$get_servers()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$get_brokers()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-invisible. Logical. \code{TRUE} if all went good.
+string vector. List of brokers with the structure broker host or host:port.
 }
 }
 \if{html}{\out{<hr>}}

@@ -14,7 +14,7 @@ A producer is an application that is responsible for publishing data to topics.
 \itemize{
 \item \href{#method-KafkaProducer-new}{\code{KafkaProducer$new()}}
 \item \href{#method-KafkaProducer-produce}{\code{KafkaProducer$produce()}}
-\item \href{#method-KafkaProducer-get_servers}{\code{KafkaProducer$get_servers()}}
+\item \href{#method-KafkaProducer-get_brokers}{\code{KafkaProducer$get_brokers()}}
 \item \href{#method-KafkaProducer-clone}{\code{KafkaProducer$clone()}}
 }
 }
@@ -23,22 +23,20 @@ A producer is an application that is responsible for publishing data to topics.
 \if{latex}{\out{\hypertarget{method-KafkaProducer-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$new(host, port, extra_options = list())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$new(brokers, extra_options = list())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{host}}{string}
+\item{\code{brokers}}{string vector. Initial list of brokers with the structure broker host or host:port.}
 
-\item{\code{port}}{string}
-
-\item{\code{extra_options}}{list}
+\item{\code{extra_options}}{list. Indicating option properties and option values to parameterize the RdKafka::Producer.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-@return invisible. Logical. \code{TRUE} if all went good.
+invisible logical. \code{TRUE} if all went good.
 }
 }
 \if{html}{\out{<hr>}}
@@ -46,36 +44,36 @@ A producer is an application that is responsible for publishing data to topics.
 \if{latex}{\out{\hypertarget{method-KafkaProducer-produce}{}}}
 \subsection{Method \code{produce()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$produce(topic, keys, values, partition = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$produce(topic, keys, payloads, partition = 0)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{topic}}{string}
+\item{\code{topic}}{string. Indicating the topic to produce to.}
 
-\item{\code{keys}}{string vector}
+\item{\code{keys}}{string vector. With all the keys for the messages.}
 
-\item{\code{values}}{string vector}
+\item{\code{payloads}}{string vector. With all the payloads for the messages. Must be of same length as keys.}
 
-\item{\code{partition}}{integer}
+\item{\code{partition}}{integer. Indicating the partition to produce to.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-invisible. Logical. \code{TRUE} if all went good.
+invisible integer. Number of messages succesfully sent.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KafkaProducer-get_servers"></a>}}
-\if{latex}{\out{\hypertarget{method-KafkaProducer-get_servers}{}}}
-\subsection{Method \code{get_servers()}}{
+\if{html}{\out{<a id="method-KafkaProducer-get_brokers"></a>}}
+\if{latex}{\out{\hypertarget{method-KafkaProducer-get_brokers}{}}}
+\subsection{Method \code{get_brokers()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$get_servers()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$get_brokers()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-invisible. Logical. \code{TRUE} if all went good.
+string vector. List of brokers with the structure broker host or host:port.
 }
 }
 \if{html}{\out{<hr>}}

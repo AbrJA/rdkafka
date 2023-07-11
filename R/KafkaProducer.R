@@ -9,44 +9,43 @@ KafkaProducer <- R6::R6Class(
     classname = "KafkaProducer",
     public = list(
         #-----------------------------------------------------------------
-        #' @param host string
-        #' @param port string
-        #' @param extra_options list
+        #' @param brokers string vector. Initial list of brokers with the structure broker host or host:port.
+        #' @param extra_options list. Indicating option properties and option values to parameterize the RdKafka::Producer.
         #'
-        #' @return @return invisible. Logical. `TRUE` if all went good.
+        #' @return invisible logical. `TRUE` if all went good.
         #' @export
-        initialize = function(host, port, extra_options = list()) {
-            stopifnot(length(host) == length(port) || length(port) == 1)
-            private$host <- host
-            private$port <- port
+        initialize = function(brokers, extra_options = list()) {
+            stopifnot(is.character(brokers))
             properties <- c("metadata.broker.list", names(extra_options))
-            values <- c(self$get_servers(), unlist(extra_options, use.names = FALSE))
-            private$producer_ptr <- GetRdProducer(properties, values)
+            values <- c(paste0(brokers, collapse = ","), unlist(extra_options, use.names = FALSE))
+            private$producer_ptr <- RdKafkaProducer(properties, values)
+            private$brokers <- brokers
+            invisible(TRUE)
         },
         # Produce single message to topic
         #-----------------------------------------------------------------
-        #' @param topic string
-        #' @param keys string vector
-        #' @param values string vector
-        #' @param partition integer
+        #' @param topic string. Indicating the topic to produce to.
+        #' @param keys string vector. With all the keys for the messages.
+        #' @param payloads string vector. With all the payloads for the messages. Must be of same length as keys.
+        #' @param partition integer. Indicating the partition to produce to.
         #'
-        #' @return invisible. Logical. `TRUE` if all went good.
+        #' @return invisible integer. Number of messages succesfully sent.
         #' @export
-        produce = function(topic, keys, values, partition = 0) {
-            stopifnot(is.character(topic), length(topic) == 1, is.character(keys), is.character(values), is.numeric(partition), length(partition) == 1)
-            invisible(KafkaProduce(private$producer_ptr, topic, partition, keys, values))
+        produce = function(topic, keys, payloads, partition = 0) {
+            stopifnot(is.character(topic), length(topic) == 1, is.character(keys), is.character(payloads), is.numeric(partition), length(partition) == 1)
+            invisible(RdProduce(private$producer_ptr, topic, partition, keys, payloads))
         },
         #-----------------------------------------------------------------
-        #' @return invisible. Logical. `TRUE` if all went good.
+        #' @return string vector. List of brokers with the structure broker host or host:port.
         #' @export
-        get_servers = function() {
-            stopifnot(!is.null(private$host), !is.null(private$port))
-            paste0(private$host, ":", private$port)
+        get_brokers = function() {
+            brokers <- strsplit(private$brokers, ",", fixed = TRUE)
+            brokers <- unlist(brokers, use.names = FALSE)
+            unique(trimws(brokers))
         }
     ),
     private = list(
-        host = NULL,
-        port = NULL,
+        brokers = NULL,
         producer_ptr = NULL
     )
 )

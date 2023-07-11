@@ -11,14 +11,14 @@
 #include <cstring>
 
 ////////////////////////////////////////////////////////////////////////////////////////
-//' @title GetRdConsumer
-//' @name GetRdConsumer
-//' @description Creates an Rcpp::XPtr<RdKafka::Consumer>. For more details on options see \href{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}
-//' @param properties a character vector indicating option properties to parameterize the RdKafka::Consumer
-//' @param values a character vector indicating option values to parameterize the RdKafka::Consumer. Must be of same length as properties.
-//' @return a Rcpp::XPtr<RdKafka::Consumer>
+//' @title RdKafkaConsumer
+//' @name RdKafkaConsumer
+//' @description Creates an Rcpp::XPtr<RdKafka::Consumer>. For more details on options see \href{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}.
+//' @param properties string vector. Indicating option properties to parameterize the RdKafka::Consumer.
+//' @param values string vector. Indicating option values to parameterize the RdKafka::Consumer. Must be of same length as properties.
+//' @return Rcpp::XPtr<RdKafka::Consumer> pointer.
 // [[Rcpp::export]]
-SEXP GetRdConsumer(Rcpp::StringVector properties, Rcpp::StringVector values) {
+SEXP RdKafkaConsumer(Rcpp::StringVector properties, Rcpp::StringVector values) {
     std::string errstr;
     auto conf = MakeKafkaConfig(properties, values);
     RdKafka::KafkaConsumer *consumer = RdKafka::KafkaConsumer::create(conf, errstr);
@@ -32,32 +32,31 @@ SEXP GetRdConsumer(Rcpp::StringVector properties, Rcpp::StringVector values) {
 //' @title RdSubscribe
 //' @name RdSubscribe
 //' @description A method to register a consumer with a set amount of topics as consumers.
-//' This is important so the broker can track offsets and register it in a consumer group
-//' @param consumerPtr a reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>
-//' @param Rtopics a character vector listing the topics to subscribe to
-//' @return the int representation of the librdkafka error code of the response to subscribe. 0 is good
+//' This is important so the broker can track offsets and register it in a consumer group.
+//' @param consumerPtr pointer. A reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>.
+//' @param rTopics string vector. Listing the topics to subscribe to.
+//' @return integer. Representation of the librdkafka error code of the response to subscribe. 0 is good.
 // [[Rcpp::export]]
-int RdSubscribe(SEXP consumerPtr, Rcpp::StringVector Rtopics) {
+int RdSubscribe(SEXP consumerPtr, Rcpp::StringVector rTopics) {
     Rcpp::XPtr<RdKafka::KafkaConsumer> consumer(consumerPtr);
-    std::vector<std::string> topics(Rtopics.size());
-    for (int i = 0; i < Rtopics.size(); i++){
-        topics[i] = Rtopics(i);
+    std::vector<std::string> topics(rTopics.size());
+    for (int i = 0; i < rTopics.size(); i++){
+        topics[i] = rTopics(i);
     }
     RdKafka::ErrorCode resp;
     resp = consumer->subscribe(topics);
     return static_cast<int>(resp);
 }
 
-//' @title KafkaConsume
-//' @name KafkaConsume
-//' @description Consume a fixed number of results from whatever topic(s)
-//'              the provided consumer is subscribed to.
-//' @param consumerPtr a reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>
-//' @param numResults how many results should be consumed before returning. Will return early if offset is at maximum
-//' @param timeoutMs number of milliseconds to wait for a new message
-//' @return a list of length numResults with values list(key = key, value = value)
+//' @title RdConsume
+//' @name RdConsume
+//' @description Consume a fixed number of results from whatever topic(s) the provided consumer is subscribed to.
+//' @param consumerPtr pointer. A reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>.
+//' @param numResults integer. How many results should be consumed before returning. Will return early if offset is at maximum.
+//' @param timeoutMs integer. Number of milliseconds to wait for a new message.
+//' @return list. With length numResults and elements topic, key and payload.
 // [[Rcpp::export]]
-Rcpp::List KafkaConsume(SEXP consumerPtr, int numResults, int timeoutMs) {
+Rcpp::List RdConsume(SEXP consumerPtr, int numResults, int timeoutMs) {
     Rcpp::XPtr<RdKafka::KafkaConsumer> consumer(consumerPtr);
 
     Rcpp::List messages(numResults);
@@ -67,7 +66,7 @@ Rcpp::List KafkaConsume(SEXP consumerPtr, int numResults, int timeoutMs) {
             case RdKafka::ERR_NO_ERROR: {
                 Rcpp::List message = Rcpp::List::create(Rcpp::Named("topic") = msg->topic_name(),
                                                         Rcpp::Named("key") = *msg->key(),
-                                                        Rcpp::Named("value") = static_cast<const char *>(msg->payload()));
+                                                        Rcpp::Named("payload") = static_cast<const char *>(msg->payload()));
                 messages[i] = message;
                 break;
             } case RdKafka::ERR__PARTITION_EOF: {

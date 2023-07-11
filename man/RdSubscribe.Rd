@@ -4,17 +4,17 @@
 \alias{RdSubscribe}
 \title{RdSubscribe}
 \usage{
-RdSubscribe(consumerPtr, Rtopics)
+RdSubscribe(consumerPtr, rTopics)
 }
 \arguments{
-\item{consumerPtr}{a reference to a Rcpp::XPtr\url{RdKafka::KafkaConsumer}}
+\item{consumerPtr}{pointer. A reference to a Rcpp::XPtr\url{RdKafka::KafkaConsumer}.}
 
-\item{Rtopics}{a character vector listing the topics to subscribe to}
+\item{rTopics}{string vector. Listing the topics to subscribe to.}
 }
 \value{
-the int representation of the librdkafka error code of the response to subscribe. 0 is good
+integer. Representation of the librdkafka error code of the response to subscribe. 0 is good.
 }
 \description{
 A method to register a consumer with a set amount of topics as consumers.
-This is important so the broker can track offsets and register it in a consumer group
+This is important so the broker can track offsets and register it in a consumer group.
 }

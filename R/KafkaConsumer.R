@@ -1,11 +1,7 @@
 #' @importFrom R6 R6Class
 #' @title Kakfa Consumer
 #' @name KafkaConsumer
-#' @description A consumer is an application which subscribes to one or more topics and processes
-#' new messages as they arrive on that topic.
-#' Consumers may also be instructed to process older messages.
-#' Consumers belong to "consumer groups". Consumer groups with more than one consumer instance can be
-#' used to parallelize message processing and / or distribute it over multiple physical machines.
+#' @description A consumer is an application which subscribes to one or more topics and processes new messages as they arrive on that topic.
 #' @references \href{https://kafka.apache.org/documentation/#intro_consumers}{Apache Kafka docs - Consumers}
 #' @importFrom R6 R6Class
 #' @export
@@ -15,88 +11,75 @@
 #'
 #' # KafkaProducer
 #' producer <- KafkaProducer$new(host = "localhost", port = 9092)
-#' producer$produce(topic = "MyTest",
-#'                  key = "Message 1",
-#'                  value = "My First Message")
-#' # Number of messages successfuly sent is returned
-#' # [1] 1
-#'
+#' producer$produce(topic = "MyTest", key = "Message 1", value = "My First Message")
 #'
 #' # KafkaConsumer
 #' consumer <- KafkaConsumer$new(host = "localhost", port = 9092, group_id = "test",
 #' extra_options = list(`auto.offset.reset` = "earliest"))
 #' consumer$subscribe(topics = "MyTest")
-#' result <- consumer$consume(topic = "MyTest")
-#'
+#' result <- consumer$consume()
 #' result
-#' # Consumed messages are returned in a list(list(key,val)) format
-#' # [[1]]
-#' # [[1]]$key
-#' # [1] "myKey"
-#' #
-#' # [[1]]$payload
-#' # [1] "My First Message"
 #'}
 KafkaConsumer <- R6::R6Class(
     classname = "KafkaConsumer",
     public = list(
         #-----------------------------------------------------------------
-        #' @param host string
-        #' @param port string
-        #' @param group_id string
-        #' @param extra_options list
+        #' @param brokers string vector. Initial list of brokers with the structure broker host or host:port.
+        #' @param group_id string. Client group id. All clients sharing the same group.id belong to the same group.
+        #' @param extra_options list. Indicating option properties and option values to parameterize the RdKafka::Consumer.
         #'
-        #' @return invisible. Logical. `TRUE` if all went good.
+        #' @return invisible logical. `TRUE` if all went good.
         #' @export
-        initialize = function(host, port, group_id, extra_options = list()) {
-            stopifnot(length(host) == length(port) || length(port) == 1)
-            private$host <- host
-            private$port <- port
+        initialize = function(brokers, group_id, extra_options = list()) {
+            stopifnot(is.character(brokers))
             properties <- c("metadata.broker.list", "group.id", names(extra_options))
-            values <- c(self$get_servers(), group_id, unlist(extra_options, use.names = FALSE))
-            private$consumer_ptr <- GetRdConsumer(properties, values)
+            values <- c(paste0(brokers, collapse = ","), group_id, unlist(extra_options, use.names = FALSE))
+            private$consumer_ptr <- RdKafkaConsumer(properties, values)
+            private$brokers <- brokers
+            invisible(TRUE)
         },
         #-----------------------------------------------------------------
-        #' @param topics string vector
+        #' @param topics string vector. Listing the topics to subscribe to.
         #'
-        #' @return @return invisible. Logical. `TRUE` if all went good.
+        #' @return integer. Representation of the `librdkafka` error code of the response to subscribe. 0 is good.
         #' @export
         subscribe = function(topics) {
             stopifnot(is.character(topics))
             result <- RdSubscribe(private$consumer_ptr, topics)
             if (result == 0) {
+                ### Test this
                 private$topics <- c(private$topics, topics)
             }
+            result
         },
         #-----------------------------------------------------------------
-        #' @param topic string
-        #' @param num_results integer
-        #' @param timeout_ms integer
+        #' @param num_results integer. How many results should be consumed before returning. Will return early if offset is at maximum.
+        #' @param timeout_ms integer. Number of milliseconds to wait for a new message.
         #'
-        #' @return invisible. Logical. `TRUE` if all went good.
+        #' @return list. Messages consumed with elements topic, key and payload.
         #' @export
         consume = function(num_results = 100, timeout_ms = 1000) {
             stopifnot(is.numeric(num_results), is.numeric(timeout_ms))
-            #if (is.null(private$topics)) stop("Consumer is not suscribed to any topic")
-            Filter(function(msg) !is.null(msg), KafkaConsume(private$consumer_ptr, num_results, timeout_ms))
+            if (is.null(private$topics)) stop("Consumer is not suscribed to any topic")
+            Filter(function(msg) !is.null(msg), RdConsume(private$consumer_ptr, num_results, timeout_ms))
         },
         #-----------------------------------------------------------------
-        #' @return invisible. Logical. `TRUE` if all went good.
+        #' @return string vector. Listing the topics subscribed to.
         #' @export
         get_topics = function() {
             private$topics
         },
         #-----------------------------------------------------------------
-        #' @return invisible. Logical. `TRUE` if all went good.
+        #' @return string vector. List of brokers with the structure broker host or host:port.
         #' @export
-        get_servers = function() {
-            stopifnot(!is.null(private$host), !is.null(private$port))
-            paste0(private$host, ":", private$port)
+        get_brokers = function() {
+            brokers <- strsplit(private$brokers, ",", fixed = TRUE)
+            brokers <- unlist(brokers, use.names = FALSE)
+            unique(trimws(brokers))
         }
     ),
     private = list(
-        host = NULL,
-        port = NULL,
+        brokers = NULL,
         topics = NULL,
         consumer_ptr = NULL
     )

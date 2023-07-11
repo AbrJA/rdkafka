@@ -10,58 +10,58 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// GetRdConsumer
-SEXP GetRdConsumer(Rcpp::StringVector properties, Rcpp::StringVector values);
-RcppExport SEXP _rdkafka_GetRdConsumer(SEXP propertiesSEXP, SEXP valuesSEXP) {
+// RdKafkaConsumer
+SEXP RdKafkaConsumer(Rcpp::StringVector properties, Rcpp::StringVector values);
+RcppExport SEXP _rdkafka_RdKafkaConsumer(SEXP propertiesSEXP, SEXP valuesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type properties(propertiesSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type values(valuesSEXP);
-    rcpp_result_gen = Rcpp::wrap(GetRdConsumer(properties, values));
+    rcpp_result_gen = Rcpp::wrap(RdKafkaConsumer(properties, values));
     return rcpp_result_gen;
 END_RCPP
 }
 // RdSubscribe
-int RdSubscribe(SEXP consumerPtr, Rcpp::StringVector Rtopics);
-RcppExport SEXP _rdkafka_RdSubscribe(SEXP consumerPtrSEXP, SEXP RtopicsSEXP) {
+int RdSubscribe(SEXP consumerPtr, Rcpp::StringVector rTopics);
+RcppExport SEXP _rdkafka_RdSubscribe(SEXP consumerPtrSEXP, SEXP rTopicsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type consumerPtr(consumerPtrSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type Rtopics(RtopicsSEXP);
-    rcpp_result_gen = Rcpp::wrap(RdSubscribe(consumerPtr, Rtopics));
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type rTopics(rTopicsSEXP);
+    rcpp_result_gen = Rcpp::wrap(RdSubscribe(consumerPtr, rTopics));
     return rcpp_result_gen;
 END_RCPP
 }
-// KafkaConsume
-Rcpp::List KafkaConsume(SEXP consumerPtr, int numResults, int timeoutMs);
-RcppExport SEXP _rdkafka_KafkaConsume(SEXP consumerPtrSEXP, SEXP numResultsSEXP, SEXP timeoutMsSEXP) {
+// RdConsume
+Rcpp::List RdConsume(SEXP consumerPtr, int numResults, int timeoutMs);
+RcppExport SEXP _rdkafka_RdConsume(SEXP consumerPtrSEXP, SEXP numResultsSEXP, SEXP timeoutMsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type consumerPtr(consumerPtrSEXP);
     Rcpp::traits::input_parameter< int >::type numResults(numResultsSEXP);
     Rcpp::traits::input_parameter< int >::type timeoutMs(timeoutMsSEXP);
-    rcpp_result_gen = Rcpp::wrap(KafkaConsume(consumerPtr, numResults, timeoutMs));
+    rcpp_result_gen = Rcpp::wrap(RdConsume(consumerPtr, numResults, timeoutMs));
     return rcpp_result_gen;
 END_RCPP
 }
-// GetRdProducer
-SEXP GetRdProducer(Rcpp::StringVector properties, Rcpp::StringVector values);
-RcppExport SEXP _rdkafka_GetRdProducer(SEXP propertiesSEXP, SEXP valuesSEXP) {
+// RdKafkaProducer
+SEXP RdKafkaProducer(Rcpp::StringVector properties, Rcpp::StringVector values);
+RcppExport SEXP _rdkafka_RdKafkaProducer(SEXP propertiesSEXP, SEXP valuesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type properties(propertiesSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type values(valuesSEXP);
-    rcpp_result_gen = Rcpp::wrap(GetRdProducer(properties, values));
+    rcpp_result_gen = Rcpp::wrap(RdKafkaProducer(properties, values));
     return rcpp_result_gen;
 END_RCPP
 }
-// KafkaProduce
-int KafkaProduce(SEXP producerPtr, SEXP topic, Rcpp::IntegerVector partition, Rcpp::StringVector keys, Rcpp::StringVector values);
-RcppExport SEXP _rdkafka_KafkaProduce(SEXP producerPtrSEXP, SEXP topicSEXP, SEXP partitionSEXP, SEXP keysSEXP, SEXP valuesSEXP) {
+// RdProduce
+int RdProduce(SEXP producerPtr, SEXP topic, Rcpp::IntegerVector partition, Rcpp::StringVector keys, Rcpp::StringVector payloads);
+RcppExport SEXP _rdkafka_RdProduce(SEXP producerPtrSEXP, SEXP topicSEXP, SEXP partitionSEXP, SEXP keysSEXP, SEXP payloadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -69,18 +69,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type topic(topicSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type partition(partitionSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type keys(keysSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type values(valuesSEXP);
-    rcpp_result_gen = Rcpp::wrap(KafkaProduce(producerPtr, topic, partition, keys, values));
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type payloads(payloadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(RdProduce(producerPtr, topic, partition, keys, payloads));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rdkafka_GetRdConsumer", (DL_FUNC) &_rdkafka_GetRdConsumer, 2},
+    {"_rdkafka_RdKafkaConsumer", (DL_FUNC) &_rdkafka_RdKafkaConsumer, 2},
     {"_rdkafka_RdSubscribe", (DL_FUNC) &_rdkafka_RdSubscribe, 2},
-    {"_rdkafka_KafkaConsume", (DL_FUNC) &_rdkafka_KafkaConsume, 3},
-    {"_rdkafka_GetRdProducer", (DL_FUNC) &_rdkafka_GetRdProducer, 2},
-    {"_rdkafka_KafkaProduce", (DL_FUNC) &_rdkafka_KafkaProduce, 5},
+    {"_rdkafka_RdConsume", (DL_FUNC) &_rdkafka_RdConsume, 3},
+    {"_rdkafka_RdKafkaProducer", (DL_FUNC) &_rdkafka_RdKafkaProducer, 2},
+    {"_rdkafka_RdProduce", (DL_FUNC) &_rdkafka_RdProduce, 5},
     {NULL, NULL, 0}
 };
 

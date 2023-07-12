@@ -7,10 +7,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 //' @title RdKafkaConsumer
 //' @name RdKafkaConsumer
-//' @description Creates an Rcpp::XPtr<RdKafka::Consumer>. For more details on options see \href{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}.
+//' @description Creates a pointer to a RdKafka Consumer. For more details on options see \href{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}.
 //' @param properties string vector. Indicating option properties to parameterize the RdKafka::Consumer.
-//' @param values string vector. Indicating option values to parameterize the RdKafka::Consumer. Must be of same length as properties.
-//' @return Rcpp::XPtr<RdKafka::Consumer> pointer.
+//' @param values string vector. Indicating option values to parameterize the RdKafka Consumer. Must be of same length as properties.
+//' @return RdKafka Consumer pointer.
 // [[Rcpp::export]]
 SEXP RdKafkaConsumer(Rcpp::StringVector properties,
                      Rcpp::StringVector values) {
@@ -31,7 +31,7 @@ SEXP RdKafkaConsumer(Rcpp::StringVector properties,
 //' @name RdSubscribe
 //' @description A method to register a consumer with a set amount of topics as consumers.
 //' This is important so the broker can track offsets and register it in a consumer group.
-//' @param consumerPtr pointer. A reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>.
+//' @param consumerPtr pointer. A reference to a RdKafka KafkaConsumer.
 //' @param topics string vector. Listing the topics to subscribe to.
 //' @return integer. Representation of the librdkafka error code of the response to subscribe. 0 is good.
 // [[Rcpp::export]]
@@ -52,7 +52,7 @@ int RdSubscribe(SEXP consumerPtr,
 //' @title RdAssign
 //' @name RdAssign
 //' @description In process
-//' @param consumerPtr pointer. A reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>.
+//' @param consumerPtr pointer. A reference to a RdKafka KafkaConsumer.
 //' @param topics string vector. Listing the topics to subscribe to.
 //' @param partitions integer vector.
 //' @param offsets integer vector.
@@ -80,7 +80,7 @@ int RdAssign(SEXP consumerPtr,
 //' @title RdConsume
 //' @name RdConsume
 //' @description Consume a fixed number of results from whatever topic(s) the provided consumer is subscribed to.
-//' @param consumerPtr pointer. A reference to a Rcpp::XPtr<RdKafka::KafkaConsumer>.
+//' @param consumerPtr pointer. A reference to a RdKafka::KafkaConsumer.
 //' @param numResults integer. How many results should be consumed before returning. Will return early if offset is at maximum.
 //' @param timeoutMs integer. Number of milliseconds to wait for a new message.
 //' @return list. With length numResults and elements topic, key and payload.

@@ -6,6 +6,16 @@
 \description{
 A producer is an application that is responsible for publishing data to topics.
 }
+\examples{
+\dontrun{
+library(rdkafka)
+
+# KafkaProducer
+producer <- KafkaProducer$new()
+no_sent <- producer$produce(topics = "MyTest", keys = "Message 1", payloads = "My First Message")
+no_sent
+}
+}
 \references{
 \href{https://kafka.apache.org/documentation/#intro_producers}{Apache Kafka docs - Producers}
 }
@@ -23,7 +33,7 @@ A producer is an application that is responsible for publishing data to topics.
 \if{latex}{\out{\hypertarget{method-KafkaProducer-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$new(brokers, extra_options = list())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$new(brokers = "localhost:9092", extra_options = list())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -44,19 +54,24 @@ invisible logical. \code{TRUE} if all went good.
 \if{latex}{\out{\hypertarget{method-KafkaProducer-produce}{}}}
 \subsection{Method \code{produce()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$produce(topic, keys, payloads, partition = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaProducer$produce(
+  topics = "Topic",
+  keys = "Key",
+  payloads = "Message",
+  partitions = 0L
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{topic}}{string. Indicating the topic to produce to.}
+\item{\code{topics}}{string vector. Indicating the topics to produce to. Must be of same length as keys or length equal 1.}
 
 \item{\code{keys}}{string vector. With all the keys for the messages.}
 
 \item{\code{payloads}}{string vector. With all the payloads for the messages. Must be of same length as keys.}
 
-\item{\code{partition}}{integer. Indicating the partition to produce to.}
+\item{\code{partitions}}{integer vector. Indicating the partitions to produce to. Must be of same length as keys or length equal 1.}
 }
 \if{html}{\out{</div>}}
 }

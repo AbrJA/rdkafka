@@ -11,12 +11,11 @@ A consumer is an application which subscribes to one or more topics and processe
 library(rdkafka)
 
 # KafkaProducer
-producer <- KafkaProducer$new(host = "localhost", port = 9092)
-producer$produce(topic = "MyTest", key = "Message 1", value = "My First Message")
+producer <- KafkaProducer$new()
+producer$produce(topics = "MyTest", keys = "Message 1", payloads = "My First Message")
 
 # KafkaConsumer
-consumer <- KafkaConsumer$new(host = "localhost", port = 9092, group_id = "test",
-extra_options = list(`auto.offset.reset` = "earliest"))
+consumer <- KafkaConsumer$new(extra_options = list(`auto.offset.reset` = "earliest"))
 consumer$subscribe(topics = "MyTest")
 result <- consumer$consume()
 result
@@ -32,7 +31,8 @@ result
 \item \href{#method-KafkaConsumer-subscribe}{\code{KafkaConsumer$subscribe()}}
 \item \href{#method-KafkaConsumer-assign}{\code{KafkaConsumer$assign()}}
 \item \href{#method-KafkaConsumer-consume}{\code{KafkaConsumer$consume()}}
-\item \href{#method-KafkaConsumer-consume_partition}{\code{KafkaConsumer$consume_partition()}}
+\item \href{#method-KafkaConsumer-get_offsets}{\code{KafkaConsumer$get_offsets()}}
+\item \href{#method-KafkaConsumer-get_partitions}{\code{KafkaConsumer$get_partitions()}}
 \item \href{#method-KafkaConsumer-get_topics}{\code{KafkaConsumer$get_topics()}}
 \item \href{#method-KafkaConsumer-get_brokers}{\code{KafkaConsumer$get_brokers()}}
 \item \href{#method-KafkaConsumer-clone}{\code{KafkaConsumer$clone()}}
@@ -43,7 +43,11 @@ result
 \if{latex}{\out{\hypertarget{method-KafkaConsumer-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$new(brokers, group_id, extra_options = list())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$new(
+  brokers = "localhost:9092",
+  group_id = "rdkafka",
+  extra_options = list()
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -66,7 +70,7 @@ invisible logical. \code{TRUE} if all went good.
 \if{latex}{\out{\hypertarget{method-KafkaConsumer-subscribe}{}}}
 \subsection{Method \code{subscribe()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$subscribe(topics)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$subscribe(topics = "Topic")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -85,17 +89,17 @@ invisible integer. Representation of the \code{librdkafka} error code of the res
 \if{latex}{\out{\hypertarget{method-KafkaConsumer-assign}{}}}
 \subsection{Method \code{assign()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$assign(topic, partition = 0, offset = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$assign(topics = "Topic", partitions = 0L, offsets = 0L)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{topic}}{string. Listing the topics to subscribe to.}
+\item{\code{topics}}{string vector. Listing the topics to subscribe to.}
 
-\item{\code{partition}}{integer. Indicating the partition to produce to.}
+\item{\code{partitions}}{integer vector. Indicating the partitions to subscribe to. Must be of same length as topics or length equal 1.}
 
-\item{\code{offset}}{integer. To do ...}
+\item{\code{offsets}}{integer vector. With the offsets where to start. Must be of same length as topics or length equal 1.}
 }
 \if{html}{\out{</div>}}
 }
@@ -108,7 +112,7 @@ invisible integer. Representation of the \code{librdkafka} error code of the res
 \if{latex}{\out{\hypertarget{method-KafkaConsumer-consume}{}}}
 \subsection{Method \code{consume()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$consume(num_results = 100, timeout_ms = 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$consume(num_results = 100L, timeout_ms = 1000L)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -125,30 +129,27 @@ list. Messages consumed with elements topic, key and payload.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KafkaConsumer-consume_partition"></a>}}
-\if{latex}{\out{\hypertarget{method-KafkaConsumer-consume_partition}{}}}
-\subsection{Method \code{consume_partition()}}{
+\if{html}{\out{<a id="method-KafkaConsumer-get_offsets"></a>}}
+\if{latex}{\out{\hypertarget{method-KafkaConsumer-get_offsets}{}}}
+\subsection{Method \code{get_offsets()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$consume_partition(num_results = 100, timeout_ms = 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$get_offsets()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{num_results}}{integer. How many results should be consumed before returning. Will return early if offset is at maximum.}
-
-\item{\code{timeout_ms}}{integer. Number of milliseconds to wait for a new message.}
-
-\item{\code{topic}}{string.}
-
-\item{\code{partition}}{integer.}
-
-\item{\code{offset}}{integer.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
-list. Messages consumed with elements topic, key and payload.
+string vector. Listing the offsets where to start.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-KafkaConsumer-get_partitions"></a>}}
+\if{latex}{\out{\hypertarget{method-KafkaConsumer-get_partitions}{}}}
+\subsection{Method \code{get_partitions()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KafkaConsumer$get_partitions()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+string vector. Listing the partitions subscribed to.
 }
 }
 \if{html}{\out{<hr>}}

@@ -7,13 +7,13 @@
 RdKafkaProducer(properties, values)
 }
 \arguments{
-\item{properties}{string vector. Indicating option properties to parameterize the RdKafka::Producer.}
+\item{properties}{string vector. Indicating option properties to parameterize the RdKafka Producer.}
 
-\item{values}{string vector. Indicating option values to parameterize the RdKafka::Producer. Must be of same length as properties.}
+\item{values}{string vector. Indicating option values to parameterize the RdKafka Producer. Must be of same length as properties.}
 }
 \value{
-Rcpp::XPtr\url{RdKafka::Producer} pointer.
+RdKafka Producer pointer.
 }
 \description{
-Creates an Rcpp::XPtr\url{RdKafka::Producer}. For more details on options see \href{https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}.
+Creates a pointer to a RdKafka Producer. For more details on options see \href{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}.
 }

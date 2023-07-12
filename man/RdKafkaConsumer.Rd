@@ -9,11 +9,11 @@ RdKafkaConsumer(properties, values)
 \arguments{
 \item{properties}{string vector. Indicating option properties to parameterize the RdKafka::Consumer.}
 
-\item{values}{string vector. Indicating option values to parameterize the RdKafka::Consumer. Must be of same length as properties.}
+\item{values}{string vector. Indicating option values to parameterize the RdKafka Consumer. Must be of same length as properties.}
 }
 \value{
-Rcpp::XPtr\url{RdKafka::Consumer} pointer.
+RdKafka Consumer pointer.
 }
 \description{
-Creates an Rcpp::XPtr\url{RdKafka::Consumer}. For more details on options see \href{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}.
+Creates a pointer to a RdKafka Consumer. For more details on options see \href{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}.
 }

@@ -6,10 +6,10 @@
 
 //' @title RdKafkaProducer
 //' @name RdKafkaProducer
-//' @description Creates an Rcpp::XPtr<RdKafka::Producer>. For more details on options see \href{https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}.
-//' @param properties string vector. Indicating option properties to parameterize the RdKafka::Producer.
-//' @param values string vector. Indicating option values to parameterize the RdKafka::Producer. Must be of same length as properties.
-//' @return Rcpp::XPtr<RdKafka::Producer> pointer.
+//' @description Creates a pointer to a RdKafka Producer. For more details on options see \href{https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md}{librdkafka}.
+//' @param properties string vector. Indicating option properties to parameterize the RdKafka Producer.
+//' @param values string vector. Indicating option values to parameterize the RdKafka Producer. Must be of same length as properties.
+//' @return RdKafka Producer pointer.
 // [[Rcpp::export]]
 SEXP RdKafkaProducer(Rcpp::StringVector properties,
                      Rcpp::StringVector values) {
@@ -29,17 +29,17 @@ SEXP RdKafkaProducer(Rcpp::StringVector properties,
 //' @title RdProduce
 //' @name RdProduce
 //' @description Produces key/values to a particular topic on a particular partition.
-//' @param producerPtr pointer. A reference to a Rcpp::XPtr<RdKafka::Producer>
+//' @param producerPtr pointer. A reference to a RdKafka Producer.
+//' @param topics string vector. Indicating the topics to produce to.
 //' @param keys string vector. With all the keys for the messages.
 //' @param payloads string vector. With all the payloads for the messages. Must be of same length as keys.
-//' @param topics string vector. Indicating the topics to produce to.
-//' @param partition integer vector. Indicating the partition to produce to.
+//' @param partitions integer vector. Indicating the partition to produce to.
 //' @return returns integer. Number of messages succesfully sent.
 // [[Rcpp::export]]
 int RdProduce(SEXP producerPtr,
+              Rcpp::StringVector topics,
               Rcpp::StringVector keys,
               Rcpp::StringVector payloads,
-              Rcpp::StringVector topics,
               Rcpp::IntegerVector partitions) {
   Rcpp::XPtr<RdKafka::Producer> producer(producerPtr);
   int numSent = 0;

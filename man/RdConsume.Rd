@@ -7,7 +7,7 @@
 RdConsume(consumerPtr, numResults, timeoutMs)
 }
 \arguments{
-\item{consumerPtr}{pointer. A reference to a Rcpp::XPtr\url{RdKafka::KafkaConsumer}.}
+\item{consumerPtr}{pointer. A reference to a RdKafka::KafkaConsumer.}
 
 \item{numResults}{integer. How many results should be consumed before returning. Will return early if offset is at maximum.}
 

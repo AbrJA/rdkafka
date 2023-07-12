@@ -4,14 +4,16 @@
 \alias{RdAssign}
 \title{RdAssign}
 \usage{
-RdAssign(consumerPtr, topic, partition, offset)
+RdAssign(consumerPtr, topics, partitions, offsets)
 }
 \arguments{
-\item{consumerPtr}{pointer. A reference to a Rcpp::XPtr\url{RdKafka::KafkaConsumer}.}
+\item{consumerPtr}{pointer. A reference to a RdKafka KafkaConsumer.}
 
-\item{topic}{string.}
+\item{topics}{string vector. Listing the topics to subscribe to.}
 
-\item{partition}{integer.}
+\item{partitions}{integer vector.}
+
+\item{offsets}{integer vector.}
 }
 \value{
 integer. Representation of the librdkafka error code of the response to subscribe. 0 is good.

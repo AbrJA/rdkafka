@@ -34,6 +34,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RdAssign
+int RdAssign(SEXP consumerPtr, Rcpp::StringVector topics, Rcpp::IntegerVector partitions, Rcpp::IntegerVector offsets);
+RcppExport SEXP _rdkafka_RdAssign(SEXP consumerPtrSEXP, SEXP topicsSEXP, SEXP partitionsSEXP, SEXP offsetsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type consumerPtr(consumerPtrSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type topics(topicsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type partitions(partitionsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type offsets(offsetsSEXP);
+    rcpp_result_gen = Rcpp::wrap(RdAssign(consumerPtr, topics, partitions, offsets));
+    return rcpp_result_gen;
+END_RCPP
+}
 // RdConsume
 Rcpp::List RdConsume(SEXP consumerPtr, int numResults, int timeoutMs);
 RcppExport SEXP _rdkafka_RdConsume(SEXP consumerPtrSEXP, SEXP numResultsSEXP, SEXP timeoutMsSEXP) {
@@ -60,17 +74,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // RdProduce
-int RdProduce(SEXP producerPtr, Rcpp::StringVector keys, Rcpp::StringVector payloads, Rcpp::StringVector topics, Rcpp::IntegerVector partitions);
-RcppExport SEXP _rdkafka_RdProduce(SEXP producerPtrSEXP, SEXP keysSEXP, SEXP payloadsSEXP, SEXP topicsSEXP, SEXP partitionsSEXP) {
+int RdProduce(SEXP producerPtr, Rcpp::StringVector topics, Rcpp::StringVector keys, Rcpp::StringVector payloads, Rcpp::IntegerVector partitions);
+RcppExport SEXP _rdkafka_RdProduce(SEXP producerPtrSEXP, SEXP topicsSEXP, SEXP keysSEXP, SEXP payloadsSEXP, SEXP partitionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type producerPtr(producerPtrSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type topics(topicsSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type keys(keysSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type payloads(payloadsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type topics(topicsSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type partitions(partitionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(RdProduce(producerPtr, keys, payloads, topics, partitions));
+    rcpp_result_gen = Rcpp::wrap(RdProduce(producerPtr, topics, keys, payloads, partitions));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -78,6 +92,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_rdkafka_RdKafkaConsumer", (DL_FUNC) &_rdkafka_RdKafkaConsumer, 2},
     {"_rdkafka_RdSubscribe", (DL_FUNC) &_rdkafka_RdSubscribe, 2},
+    {"_rdkafka_RdAssign", (DL_FUNC) &_rdkafka_RdAssign, 4},
     {"_rdkafka_RdConsume", (DL_FUNC) &_rdkafka_RdConsume, 3},
     {"_rdkafka_RdKafkaProducer", (DL_FUNC) &_rdkafka_RdKafkaProducer, 2},
     {"_rdkafka_RdProduce", (DL_FUNC) &_rdkafka_RdProduce, 5},

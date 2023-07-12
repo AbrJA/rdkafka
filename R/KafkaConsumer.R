@@ -10,12 +10,11 @@
 #' library(rdkafka)
 #'
 #' # KafkaProducer
-#' producer <- KafkaProducer$new(host = "localhost", port = 9092)
-#' producer$produce(topic = "MyTest", key = "Message 1", value = "My First Message")
+#' producer <- KafkaProducer$new()
+#' producer$produce(topics = "MyTest", keys = "Message 1", payloads = "My First Message")
 #'
 #' # KafkaConsumer
-#' consumer <- KafkaConsumer$new(host = "localhost", port = 9092, group_id = "test",
-#' extra_options = list(`auto.offset.reset` = "earliest"))
+#' consumer <- KafkaConsumer$new(extra_options = list(`auto.offset.reset` = "earliest"))
 #' consumer$subscribe(topics = "MyTest")
 #' result <- consumer$consume()
 #' result
@@ -57,9 +56,10 @@ KafkaConsumer <- R6::R6Class(
         #' @param topics string vector. Listing the topics to subscribe to.
         #' @param partitions integer vector. Indicating the partitions to subscribe to. Must be of same length as topics or length equal 1.
         #' @param offsets integer vector. With the offsets where to start. Must be of same length as topics or length equal 1.
+        #'
         #' @return invisible integer. Representation of the `librdkafka` error code of the response to subscribe. 0 is good.
         #' @export
-        assign = function(topics = "Topic", partitions = rep.int(0L, length(topics)), offsets = rep.int(0L, length(topics))) {
+        assign = function(topics = "Topic", partitions = 0L, offsets = 0L) {
             stopifnot(is.character(topics), is.numeric(partitions), is.numeric(offsets))
             if (length(partitions) == 1L) partitions <- rep.int(partitions, length(topics))
             if (length(offsets) == 1L) offsets <- rep.int(offsets, length(topics))
@@ -84,7 +84,7 @@ KafkaConsumer <- R6::R6Class(
             Filter(function(msg) !is.null(msg), RdConsume(private$consumer_ptr, num_results, timeout_ms))
         },
         #-----------------------------------------------------------------
-        #' @return string vector. Listing the offsets subscribed to.
+        #' @return string vector. Listing the offsets where to start.
         #' @export
         get_offsets = function() {
             private$offsets
